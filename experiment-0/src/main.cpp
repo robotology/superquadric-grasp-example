@@ -76,6 +76,12 @@ public:
     }
 
     /************************************************************************/
+    bool getperiod()
+    {
+        return 0.05;
+    }
+
+    /************************************************************************/
     bool set_object_name(const string &object_name)
     {
         LockGuard lg(mutex);
@@ -98,6 +104,7 @@ public:
 
         portBlobRpc.open("/grasping-test/blob:rpc");
         portOPCrpc.open("/grasping-test/OPC:rpc");
+        portRpc.open("/grasping-test/rpc");
 
         attach(portRpc);
         return true;
@@ -134,6 +141,7 @@ public:
                 getBlob();
             }
         }
+
 
         return true;
     }
