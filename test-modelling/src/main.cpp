@@ -52,6 +52,8 @@ class AcquireBlob : public RFModule,
     RpcClient portOPCrpc;
     RpcServer portRpc;
 
+    BufferedPort<Bottle > blobPort;
+
     Mutex mutex;
 
 public:
@@ -63,7 +65,7 @@ public:
     }
 
     /************************************************************************/
-    Bottle  get_blob()
+    Bottle  get_Blob()
     {
         Bottle blob;
         for (size_t i=0; i<blob_points.size(); i++)
@@ -76,9 +78,26 @@ public:
     }
 
     /************************************************************************/
+    void  sendBlob()
+    {
+        Bottle &blob=blobPort.prepare();
+        blob.clear();
+        Bottle &b1=blob.addList();
+        
+        for (size_t i=0; i<blob_points.size(); i++)
+        {
+            Bottle &b=b1.addList();
+            b.addDouble(blob_points[i].x); b.addDouble(blob_points[i].y);
+        }
+
+        blobPort.write();
+        
+    }
+
+    /************************************************************************/
     bool getperiod()
     {
-        return 0.05;
+        return 0.0;
     }
 
     /************************************************************************/
@@ -105,6 +124,8 @@ public:
         portBlobRpc.open("/grasping-test/blob:rpc");
         portOPCrpc.open("/grasping-test/OPC:rpc");
         portRpc.open("/grasping-test/rpc");
+
+        blobPort.open("/grasping-test/blob:o");
 
         attach(portRpc);
         return true;
@@ -142,6 +163,9 @@ public:
             }
         }
 
+    if (blob_points.size()>0)
+        sendBlob();
+
 
         return true;
     }
@@ -151,12 +175,13 @@ public:
     {
         Bottle cmd,reply;
         blob_points.clear();
-
+        
         cmd.addString("get_component_around");
         cmd.addInt(contour[0].x); cmd.addInt(contour[0].y);
 
         if (portBlobRpc.write(cmd,reply))
         {
+            
             if (Bottle *blob_list=reply.get(0).asList())
             {
                 for (int i=0; i<blob_list->size();i++)
