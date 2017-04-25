@@ -148,9 +148,15 @@ public:
     {
         if (method=="point")
         {
+            blob_points.clear();
+
             if (contour.size()>0)
             {
                 getBlob();
+            }
+            else
+            {
+                blob_points.push_back(cv::Point(0,0));
             }
         }
         else if (method=="name")
@@ -160,6 +166,10 @@ public:
             if ((contour.size()>0) )
             {
                 getBlob();
+            }
+            else
+            {
+                blob_points.push_back(cv::Point(0,0));
             }
         }
 
