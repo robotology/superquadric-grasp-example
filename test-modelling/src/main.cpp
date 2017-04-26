@@ -44,12 +44,14 @@ class AcquireBlob : public RFModule,
 {
     string method;
     string objname;
+    bool streaming;
 
     vector<cv::Point> contour;
     deque<cv::Point> blob_points;
 
     RpcClient portBlobRpc;
     RpcClient portOPCrpc;
+    RpcClient superqRpc;
     RpcServer portRpc;
 
     BufferedPort<Bottle > blobPort;
@@ -75,6 +77,18 @@ public:
         }
 
         return blob;
+    }
+
+    /************************************************************************/
+    bool  set_streaming_mode(const string &entry)
+    {
+        if (entry=="on" || entry=="off")
+        {
+            streaming=(entry=="on");
+            return true;
+        }
+        else
+            return false;
     }
 
     /************************************************************************/
@@ -121,8 +135,11 @@ public:
         if (rf.find("object_name").isNull())
             objname="object";
 
+        streaming=(rf.check("streaming", Value("off")).asString()=="on");
+
         portBlobRpc.open("/grasping-test/blob:rpc");
         portOPCrpc.open("/grasping-test/OPC:rpc");
+        superqRpc.open("/grasping-test/superq:rpc");
         portRpc.open("/grasping-test/rpc");
 
         blobPort.open("/grasping-test/blob:o");
@@ -139,6 +156,8 @@ public:
             portBlobRpc.close();
         if (portOPCrpc.asPort().isOpen())
             portOPCrpc.close();
+        if (superqRpc.asPort().isOpen())
+            superqRpc.close();
 
         return true;
     }
@@ -173,8 +192,28 @@ public:
             }
         }
 
-    if (blob_points.size()>0)
-        sendBlob();
+        if (blob_points.size()>0 && streaming==true)
+            sendBlob();
+        else if (!streaming)
+        {
+            Bottle cmd, reply;
+            cmd.addString("get_superq");
+
+            Bottle &in1=cmd.addList();
+        
+            for (size_t i=0; i<blob_points.size(); i++)
+            {
+                Bottle &in=in1.addList();
+                in.addDouble(blob_points[i].x);                        
+                in.addDouble(blob_points[i].y);
+            }
+            
+            // Add 1 instead of 0 if you want the filtered superquadric
+            cmd.addInt(0);
+
+            superqRpc.write(cmd, reply);
+            cout<<"Received superquadric: "<<reply.toString()<<endl;
+        }
 
 
         return true;

@@ -22,5 +22,11 @@
         <to>/memory/rpc</to>
         <protocol>tcp</protocol>
     </connection>
+
+    <connection>
+        <from>/grasping-test/superq:rpc</from>
+        <to>/superquadric-model/rpc</to>
+        <protocol>tcp</protocol>
+    </connection>
 </application>
 

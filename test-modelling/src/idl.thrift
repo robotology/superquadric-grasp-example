@@ -35,6 +35,12 @@ service graspingTest_IDL
     */
     bool set_object_name(1:string object_name)
 
+    /* Set the streaming mode on or off
+    *@param entry can be "on" or "off"
+    *@return true/false on success/failure
+    */
+    bool  set_streaming_mode(1:string entry)
+
 }
 
 
