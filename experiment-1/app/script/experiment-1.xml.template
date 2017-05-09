@@ -1,0 +1,39 @@
+<application>
+    <name>experiment-1</name>
+
+    <dependencies>
+        <port>/lbpExtract/rpc:i</port>
+        <port>/memory/rpc</port>
+    </dependencies>
+    
+    <module>
+       <name>experiment-1</name>
+       <node>icub21</node>
+    </module>
+   
+    <connection>
+        <from>/experiment-1/blob:rpc</from>
+        <to>/lbpExtract/rpc:i</to>
+        <protocol>tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/experiment-1/OPC:rpc</from>
+        <to>/memory/rpc</to>
+        <protocol>tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/experiment-1/superq:rpc</from>
+        <to>/superquadric-model/rpc</to>
+        <protocol>tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/experiment-1/grasp:rpc</from>
+        <to>/superquadric-grasp/rpc</to>
+        <protocol>tcp</protocol>
+    </connection>
+
+</application>
+

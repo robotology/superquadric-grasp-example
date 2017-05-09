@@ -27,3 +27,7 @@
 *.exe
 *.out
 *.app
+
+#Build folder
+/build*/
+/experiment-1/build*/
