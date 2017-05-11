@@ -16,9 +16,9 @@ struct Bottle
   )
 
 /**
-* testingModule_IDL
+* experimentOne_IDL
 *
-* IDL Interface to \ref testing-module services.
+* IDL Interface to \ref experiment-1 services.
 */
 
 service experimentOne_IDL
@@ -79,9 +79,22 @@ service experimentOne_IDL
     *If you want just to perform step 3
     * (if step 2 has been performed).
     * @return true/false on success/failure.
-    * @return true.
     */
     bool grasp_object();
+
+    /*
+    *Ask the robot to stop and go back
+    * to home position with the arm 
+    * that is moving.
+    * @return true/false on success/failure.
+    */
+    bool go_back_home();
+
+    /*
+    *Clear all the computed poses
+    * @return true.
+    */
+    bool clear_poses();
 
     /*
     * Set the hand for pose computation.

@@ -67,6 +67,7 @@ class ExperimentOne : public RFModule,
 
     bool go_on;
     bool online;
+    bool go_home;
     bool superq_received;
     bool pose_received;
     bool robot_moving;
@@ -223,6 +224,7 @@ public:
         {
             go_on=true;
             robot_moving=false;
+            go_home=false;
 
             return true;
         }
@@ -230,6 +232,29 @@ public:
         {
             return false;
         }
+    }
+
+    /************************************************************************/
+    bool go_back_home()
+    {
+        go_home=true;
+
+        robot_moving=true;
+
+        go_on=false;
+
+        return true;
+    }
+
+    /************************************************************************/
+    bool clear_poses()
+    {
+        Bottle cmd, reply;
+        cmd.addString("clear_poses");
+
+        graspRpc.write(cmd, reply);
+
+        return true;
     }
 
     /************************************************************************/
@@ -285,7 +310,6 @@ public:
     /**********************************************************************/
     bool close()
     {
-
         if (portBlobRpc.asPort().isOpen())
             portBlobRpc.close();
         if (portOPCrpc.asPort().isOpen())
@@ -352,7 +376,7 @@ public:
 
             superqRpc.write(cmd, superq);
 
-            cout<<"Received superquadric: "<<superq.toString()<<endl;
+            yInfo()<<"Received superquadric: "<<superq.toString();
 
             if (!superq.findGroup("dimensions").isNull())
                 superq_received=true;
@@ -373,8 +397,8 @@ public:
 
             yInfo()<<"Command asked "<<cmd.toString();
 
-
             graspRpc.write(cmd, reply);
+
             yInfo()<<"Received solution: "<<reply.toString();
 
             if (reply.size()>0)
@@ -391,6 +415,7 @@ public:
             cmd.addString(hand_for_moving);
 
             yInfo()<<"Asked to move: "<<cmd.toString();
+
             graspRpc.write(cmd, reply);
 
             if (reply.get(0).asString()=="ok")
@@ -400,6 +425,20 @@ public:
             }
 
             go_on=false;
+        }
+
+        if (go_home==true)
+        {
+            Bottle cmd, reply;
+            cmd.clear();
+            cmd.addString("go_home");
+            cmd.addString(hand_for_moving);
+
+            yInfo()<<"Asked to stop: "<<cmd.toString();
+
+            graspRpc.write(cmd, reply);
+
+            go_home=false;
         }
 
         return true;
@@ -415,8 +454,7 @@ public:
         cmd.addInt(contour[0].x); cmd.addInt(contour[0].y);
 
         if (portBlobRpc.write(cmd,reply))
-        {
-            
+        {           
             if (Bottle *blob_list=reply.get(0).asList())
             {
                 for (int i=0; i<blob_list->size();i++)
