@@ -65,6 +65,8 @@ class ExperimentOne : public RFModule,
     Vector object;
     Vector superq_aux;
 
+    Bottle superq_b;
+
     bool go_on;
     bool online;
     bool go_home;
@@ -372,14 +374,17 @@ public:
             }
             
             // Add 1 instead of 0 if you want the filtered superquadric
-            cmd.addInt(1);
+            cmd.addInt(0);
 
-            superqRpc.write(cmd, superq);
+            superqRpc.write(cmd, superq_b);
 
-            yInfo()<<"Received superquadric: "<<superq.toString();
+            yInfo()<<"Received superquadric: "<<superq_b.toString();
 
-            if (!superq.findGroup("dimensions").isNull())
+            //if (!superq.find("dimensions").isNull())
+            // {
+            //    yDebug()<<"superq.find(dimensions)"<<superq.find("dimensions").toString();
                 superq_received=true;
+            //}
 
             go_on=false;
         }
@@ -391,7 +396,7 @@ public:
             Bottle cmd, reply;
             cmd.addString("get_grasping_pose");
 
-            getBottle(superq, cmd);
+            getBottle(superq_b, cmd);
 
             cmd.addString(hand_for_computation);
 
@@ -632,9 +637,41 @@ public:
     }
 
     /**********************************************************************/
-    void getBottle(Property &estimated_superq, Bottle &cmd)
+    void getBottle(Bottle &estimated_superq, Bottle &cmd)
     {
-        Bottle *dim=estimated_superq.find("dimensions").asList();
+        Bottle *all=estimated_superq.get(0).asList();
+
+        for (size_t i=0; i<all->size(); i++)
+        {
+            Bottle *group=all->get(i).asList();
+            if (group->get(0).asString() == "dimensions")
+            {
+                 Bottle *dim=group->get(1).asList();
+
+                 superq_aux[0]=dim->get(0).asDouble(); superq_aux[1]=dim->get(1).asDouble(); superq_aux[2]=dim->get(2).asDouble();
+            }
+            else if (group->get(0).asString() == "exponents")
+            {
+                 Bottle *dim=group->get(1).asList();
+
+                 superq_aux[3]=dim->get(0).asDouble(); superq_aux[4]=dim->get(1).asDouble();
+            }
+            else if (group->get(0).asString() == "center")
+            {
+                 Bottle *dim=group->get(1).asList();
+
+                 superq_aux[5]=dim->get(0).asDouble(); superq_aux[6]=dim->get(1).asDouble(); superq_aux[7]=dim->get(2).asDouble();
+            }
+            else if (group->get(0).asString() == "orientation")
+            {
+                 Bottle *dim=group->get(1).asList();
+
+                 superq_aux[8]=dim->get(0).asDouble(); superq_aux[9]=dim->get(1).asDouble(); superq_aux[10]=dim->get(2).asDouble(); superq_aux[11]=dim->get(2).asDouble();
+            }
+
+        }
+                
+        /*Bottle *dim=estimated_superq.find("dimensions").asList();
 
         if (!estimated_superq.find("dimensions").isNull())
         {
@@ -669,7 +706,7 @@ public:
             Vector axis(4,0.0);
             axis[0]=orientation->get(0).asDouble(); axis[1]=orientation->get(1).asDouble(); axis[2]=orientation->get(2).asDouble(); axis[3]=orientation->get(3).asDouble();
             superq_aux.setSubvector(8,axis);
-        }
+        }*/
 
         Bottle &b1=cmd.addList();
         Bottle &b2=b1.addList();
