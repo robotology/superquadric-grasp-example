@@ -374,7 +374,7 @@ public:
             }
             
             // Add 1 instead of 0 if you want the filtered superquadric
-            cmd.addInt(0);
+            cmd.addInt(1);
 
             superqRpc.write(cmd, superq_b);
 
