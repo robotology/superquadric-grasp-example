@@ -70,6 +70,7 @@ class ExperimentOne : public RFModule,
     bool go_on;
     bool online;
     bool go_home;
+    bool filtered;
     bool superq_received;
     bool pose_received;
     bool robot_moving;
@@ -260,6 +261,27 @@ public:
     }
 
     /************************************************************************/
+    bool set_filtered_superq(const string &entry)
+    {
+        if ((entry=="on") || (entry=="off"))
+        {
+            filtered=(entry=="on");
+            return true;
+        }
+        else
+            return false;          
+    }
+
+    /************************************************************************/
+    string get_filtered_superq()
+    {
+        if (filtered)
+            return "on";
+        else
+            return "off";
+    }
+
+    /************************************************************************/
     bool getperiod()
     {
         return 0.0;
@@ -278,6 +300,7 @@ public:
             objname="object";
 
         streaming=(rf.check("streaming", Value("off")).asString()=="on");
+        filtered=(rf.check("filtered", Value("off")).asString()=="on");
         hand_for_computation=rf.check("hand_for_computation", Value("both")).asString();
         hand_for_moving=rf.check("hand_for_moving", Value("right")).asString();
 
@@ -372,9 +395,14 @@ public:
                 in.addDouble(blob_points[i].x);                        
                 in.addDouble(blob_points[i].y);
             }
+
+            go_on=false;
             
             // Add 1 instead of 0 if you want the filtered superquadric
-            cmd.addInt(1);
+            if (filtered)
+                cmd.addInt(1);
+            else
+                cmd.addInt(0);
 
             superqRpc.write(cmd, superq_b);
 
@@ -384,9 +412,7 @@ public:
             // {
             //    yDebug()<<"superq.find(dimensions)"<<superq.find("dimensions").toString();
                 superq_received=true;
-            //}
-
-            go_on=false;
+            //}           
         }
         else if (online==false)
             superq_received=true;

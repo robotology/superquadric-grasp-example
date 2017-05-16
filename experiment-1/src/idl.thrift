@@ -122,6 +122,19 @@ service experimentOne_IDL
     */
     string get_hand_for_moving();
 
+    /*
+    * Set if to ask the filtered superquadric or not.
+    * @param entry can be "on" or "off".
+    * @return "on" or "off".
+    */
+    bool set_filtered_superq(1: string e);
+
+    /*
+    * Get if to ask the filtered superquadric or not.
+    * @return true/false on success/failure.
+    */
+    string get_filtered_superq();
+
 }
 
 
