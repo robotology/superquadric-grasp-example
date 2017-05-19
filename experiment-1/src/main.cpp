@@ -30,7 +30,6 @@
 
 #include <opencv2/opencv.hpp>
 
-
 #include "src/experimentOne_IDL.h"
 
 using namespace std;
@@ -46,7 +45,6 @@ class ExperimentOne : public RFModule,
     string hand_for_moving;
     string method;
     string objname;
-    bool streaming;
 
     vector<cv::Point> contour;
     deque<cv::Point> blob_points;
@@ -56,8 +54,6 @@ class ExperimentOne : public RFModule,
     RpcClient superqRpc;
     RpcClient graspRpc;
     RpcServer portRpc;
-
-    BufferedPort<Bottle > blobPort;
 
     Mutex mutex;
 
@@ -99,35 +95,6 @@ public:
     }
 
     /************************************************************************/
-    bool  set_streaming_mode(const string &entry)
-    {
-        if (entry=="on" || entry=="off")
-        {
-            streaming=(entry=="on");
-            return true;
-        }
-        else
-            return false;
-    }
-
-    /************************************************************************/
-    void  sendBlob()
-    {
-        Bottle &blob=blobPort.prepare();
-        blob.clear();
-        Bottle &b1=blob.addList();
-        
-        for (size_t i=0; i<blob_points.size(); i++)
-        {
-            Bottle &b=b1.addList();
-            b.addDouble(blob_points[i].x); b.addDouble(blob_points[i].y);
-        }
-
-        blobPort.write();
-        
-    }
-
-    /************************************************************************/
     bool set_object_name(const string &object_name)
     {
         LockGuard lg(mutex);
@@ -135,6 +102,12 @@ public:
         method="name";
 
         return true;
+    }
+
+    /************************************************************************/
+    string get_object_name()
+    {
+        return objname;
     }
 
     /************************************************************************/
@@ -181,7 +154,6 @@ public:
     bool go_next()
     {
         go_on=true;
-        streaming=false;
 
         return true;
     }
@@ -299,7 +271,6 @@ public:
         if (rf.find("object_name").isNull())
             objname="object";
 
-        streaming=(rf.check("streaming", Value("off")).asString()=="on");
         filtered=(rf.check("filtered", Value("off")).asString()=="on");
         hand_for_computation=rf.check("hand_for_computation", Value("both")).asString();
         hand_for_moving=rf.check("hand_for_moving", Value("right")).asString();
@@ -317,8 +288,6 @@ public:
         superqRpc.open("/experiment-1/superq:rpc");
         graspRpc.open("/experiment-1/grasp:rpc");
         portRpc.open("/experiment-1/rpc");
-
-        blobPort.open("/experiment-1/blob:o");
 
         attach(portRpc);
 
@@ -380,9 +349,7 @@ public:
             }
         }
 
-        if (blob_points.size()>0 && streaming==true)
-            sendBlob();
-        else if ((!streaming) && (go_on==true) && (superq_received==false) && (online==true))
+        if ((go_on==true) && (superq_received==false) && (online==true))
         {
             Bottle cmd;
             cmd.addString("get_superq");
@@ -408,11 +375,7 @@ public:
 
             yInfo()<<"Received superquadric: "<<superq_b.toString();
 
-            //if (!superq.find("dimensions").isNull())
-            // {
-            //    yDebug()<<"superq.find(dimensions)"<<superq.find("dimensions").toString();
-                superq_received=true;
-            //}           
+            superq_received=true;
         }
         else if (online==false)
             superq_received=true;

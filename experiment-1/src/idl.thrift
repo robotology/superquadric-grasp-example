@@ -28,14 +28,6 @@ service experimentOne_IDL
     *@return a bottle containing all the 2D points of the blob
     */
     Bottle  get_blob();
-
-    /*
-    * Set the streaming mode on/off 
-    * (useful for visualization and tracking).
-    * @param entry can be "on" or "off".
-    * @return true/false on success/failure.
-    */
-    bool set_streaming_mode(1: string entry);
     
     /*
     * Set the name of the object
@@ -44,6 +36,12 @@ service experimentOne_IDL
     * @return true/false on success/failure.
     */
     bool  set_object_name(1: string entry);
+
+    /*
+    * Get the name of the object
+    * @return a string with the name of the object.
+    */
+    string  get_object_name();
 
     /*
     * Ask to go to the next step, following the pipeline:
