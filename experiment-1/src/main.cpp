@@ -64,7 +64,8 @@ class ExperimentOne : public RFModule,
     Bottle superq_b;
 
     bool go_on;
-    bool online;
+    bool reset;
+    bool online;   
     bool go_home;
     bool filtered;
     bool superq_received;
@@ -254,6 +255,27 @@ public:
     }
 
     /************************************************************************/
+    bool set_reset_filter(const string &entry)
+    {
+        if ((entry=="on") || (entry=="off"))
+        {
+            reset=(entry=="on");
+            return true;
+        }
+        else
+            return false;
+    }
+
+    /************************************************************************/
+    string get_reset_filter()
+    {
+        if (reset)
+            return "on";
+        else
+            return "off";
+    }
+
+    /************************************************************************/
     bool getperiod()
     {
         return 0.0;
@@ -272,6 +294,7 @@ public:
             objname="object";
 
         filtered=(rf.check("filtered", Value("off")).asString()=="on");
+        reset=(rf.check("reset", Value("off")).asString()=="on");
         hand_for_computation=rf.check("hand_for_computation", Value("both")).asString();
         hand_for_moving=rf.check("hand_for_moving", Value("right")).asString();
 
@@ -367,6 +390,12 @@ public:
             
             // Add 1 instead of 0 if you want the filtered superquadric
             if (filtered)
+                cmd.addInt(1);
+            else
+                cmd.addInt(0);
+
+            // Add 1 if you want to reset the superquadric filter, 0 otherwise
+            if (reset)
                 cmd.addInt(1);
             else
                 cmd.addInt(0);
