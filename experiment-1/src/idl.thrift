@@ -132,6 +132,19 @@ service experimentOne_IDL
     * @return true/false on success/failure.
     */
     string get_filtered_superq();
+    
+    /*
+    * Set if to reset the filtered superquadric or not.
+    * @param entry can be "on" or "off".
+    * @return "on" or "off".
+    */
+    bool set_reset_filter(1: string e);
+
+    /*
+    * Get if to reset the filtered superquadric or not.
+    * @return true/false on success/failure.
+    */
+    string get_reset_filter();
 
 }
 
