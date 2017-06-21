@@ -48,9 +48,11 @@ class ExperimentOne : public RFModule,
 
     vector<cv::Point> contour;
     deque<cv::Point> blob_points;
+    deque<Vector> points;
 
     RpcClient portBlobRpc;
     RpcClient portOPCrpc;
+    RpcClient portSFMRpc;
     RpcClient superqRpc;
     RpcClient graspRpc;
     RpcServer portRpc;
@@ -73,6 +75,9 @@ class ExperimentOne : public RFModule,
     bool robot_moving;
 
     ResourceFinder *rf;
+
+    ImageOf<PixelRgb> *ImgIn;
+    BufferedPort<ImageOf<PixelRgb> > portImgIn;
 
 public:
 
@@ -308,6 +313,7 @@ public:
 
         portBlobRpc.open("/experiment-1/blob:rpc");
         portOPCrpc.open("/experiment-1/OPC:rpc");
+        portSFMRpc.open("/experiment-1/SFM:rpc");
         superqRpc.open("/experiment-1/superq:rpc");
         graspRpc.open("/experiment-1/grasp:rpc");
         portRpc.open("/experiment-1/rpc");
@@ -331,6 +337,8 @@ public:
             portBlobRpc.close();
         if (portOPCrpc.asPort().isOpen())
             portOPCrpc.close();
+        if (portSFMRpc.asPort().isOpen())
+            portSFMRpc.close();
         if (superqRpc.asPort().isOpen())
             superqRpc.close();
         if (graspRpc.asPort().isOpen())
@@ -372,6 +380,13 @@ public:
             }
         }
 
+        ImgIn=portImgIn.read();
+
+        if (blob_points.size()>1)
+        {
+            get3Dpoints(ImgIn);
+        }
+
         if ((go_on==true) && (superq_received==false) && (online==true))
         {
             Bottle cmd;
@@ -379,11 +394,12 @@ public:
 
             Bottle &in1=cmd.addList();
         
-            for (size_t i=0; i<blob_points.size(); i++)
+            for (size_t i=0; i<points.size(); i++)
             {
                 Bottle &in=in1.addList();
-                in.addDouble(blob_points[i].x);                        
-                in.addDouble(blob_points[i].y);
+                in.addDouble(points[i][0]);                        
+                in.addDouble(points[i][1]);
+                in.addDouble(points[i][2]); 
             }
 
             go_on=false;
@@ -612,6 +628,58 @@ public:
         {
             yError("reply size for object id less than 1!");
             contour.clear();
+        }
+    }
+
+    /***********************************************************************/
+    void get3Dpoints(ImageOf<PixelRgb>  *ImgIn)
+    {
+        Bottle cmd,reply;
+        cmd.addString("Points");
+        int count_blob=0;
+
+        points.clear();
+
+        for (size_t i=0; i<blob_points.size(); i++)
+        {
+            cv::Point single_point=blob_points[i];
+            cmd.addInt(single_point.x);
+            cmd.addInt(single_point.y);
+        }
+
+        if (portSFMRpc.write(cmd,reply))
+        {
+            count_blob=0;
+
+            for (int idx=0;idx<reply.size();idx+=3)
+            {
+                Vector point(6,0.0);
+                point[0]=reply.get(idx+0).asDouble();
+                point[1]=reply.get(idx+1).asDouble();
+                point[2]=reply.get(idx+2).asDouble();
+
+                count_blob+=2;
+
+                if ((norm(point)>0))
+                {
+                    points.push_back(point);
+                }
+            }
+
+            if (points.size()<=0)
+            {
+                yError("[SuperqComputation]: Some problems in point acquisition!");
+            }
+            else
+            {
+                Vector colors(3,0.0);
+                colors[0]=255;
+            }
+        }
+        else
+        {
+            yError("[SuperqComputation]: SFM reply is fail!");
+            points.clear();
         }
     }
 

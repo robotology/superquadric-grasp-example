@@ -1,5 +1,5 @@
 <application>
-    <name>experiment-1</name>
+    <name>experiment-1-withSFM</name>
 
     <dependencies>
         <port>/lbpExtract/rpc:i</port>
@@ -20,6 +20,12 @@
     <connection>
         <from>/experiment-1/OPC:rpc</from>
         <to>/memory/rpc</to>
+        <protocol>tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/experiment-1/SFM:rpc</from>
+        <to>/SFM/rpc</to>
         <protocol>tcp</protocol>
     </connection>
 
