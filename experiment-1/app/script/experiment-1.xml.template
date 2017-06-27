@@ -10,6 +10,7 @@
     
     <module>
        <name>experiment-1</name>
+       <parameters> --from config.ini </parameters>
        <node>icub21</node>
     </module>
 
@@ -80,6 +81,7 @@
 
     <module>
        <name>superquadric-model</name>
+        <parameters> --from config.ini </parameters>
        <node>icub21</node>
     </module>
     <module>
@@ -108,6 +110,7 @@
 
  <module>
        <name>superquadric-grasp</name>
+       <parameters> --from config.ini </parameters>
        <node>icub21</node>
     </module>
 
