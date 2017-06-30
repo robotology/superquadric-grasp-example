@@ -151,7 +151,7 @@ service experimentOne_IDL
     * @param the name of the object class
     * @return true/false on success/failure.
     */
-    bool set_object_class(const string &entry);
+    bool set_object_class(1: string entry);
 
     /*
     * Get the current object class
