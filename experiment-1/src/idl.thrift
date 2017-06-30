@@ -146,6 +146,19 @@ service experimentOne_IDL
     */
     string get_reset_filter();
 
+    /*
+    * Set the current object class
+    * @param the name of the object class
+    * @return true/false on success/failure.
+    */
+    bool set_object_class(const string &entry);
+
+    /*
+    * Get the current object class
+    * @return the current object class.
+    */
+    string get_object_class();
+
 }
 
 

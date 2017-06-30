@@ -64,6 +64,7 @@ class ExperimentOne : public RFModule,
     Vector superq_aux;
 
     Bottle superq_b;
+    string object_class;
 
     bool go_on;
     bool reset;
@@ -278,6 +279,24 @@ public:
             return "on";
         else
             return "off";
+    }
+
+    /************************************************************************/
+    bool set_object_class(const string &entry)
+    {
+        object_class=entry;
+        Bottle cmd, reply;
+        cmd.addString("set_object_class");
+        cmd.addString(entry);
+        superqRpc.write(cmd, reply);
+
+        return (reply.get(0).asString()=="ok");
+    }
+
+    /************************************************************************/
+    string get_object_class()
+    {
+        return object_class;
     }
 
     /************************************************************************/
