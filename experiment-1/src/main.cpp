@@ -66,6 +66,7 @@ class ExperimentOne : public RFModule,
     Bottle superq_b;
     string object_class;
 
+    int n_pc;
     bool go_on;
     bool reset;
     bool online;   
@@ -322,6 +323,8 @@ public:
         hand_for_computation=rf.check("hand_for_computation", Value("both")).asString();
         hand_for_moving=rf.check("hand_for_moving", Value("right")).asString();
 
+        n_pc=rf.check("num_point_cloud", Value(5)).asInt();
+
         online=(rf.check("online", Value("off")).asString()=="on");
 
         if (online==false)
@@ -403,43 +406,83 @@ public:
 
         if (blob_points.size()>1)
         {
-            get3Dpoints(ImgIn);
+            points=get3Dpoints(ImgIn);
         }
 
         if ((go_on==true) && (superq_received==false) && (online==true))
         {
-            Bottle cmd;
-            cmd.addString("get_superq");
 
-            Bottle &in1=cmd.addList();
-        
-            for (size_t i=0; i<points.size(); i++)
+            if (!filtered)
             {
-                Bottle &in=in1.addList();
-                in.addDouble(points[i][0]);                        
-                in.addDouble(points[i][1]);
-                in.addDouble(points[i][2]); 
+                Bottle cmd;
+                cmd.addString("get_superq");
+
+                Bottle &in1=cmd.addList();
+
+                for (size_t i=0; i<points.size(); i++)
+                {
+                    Bottle &in=in1.addList();
+                    in.addDouble(points[i][0]);
+                    in.addDouble(points[i][1]);
+                    in.addDouble(points[i][2]);
+                }
+
+                go_on=false;
+
+                superqRpc.write(cmd, superq_b);
+
+                yInfo()<<"Received superquadric: "<<superq_b.toString();
+
+                superq_received=true;
             }
-
-            go_on=false;
-            
-            // Add 1 instead of 0 if you want the filtered superquadric
-            if (filtered)
-                cmd.addInt(1);
             else
-                cmd.addInt(0);
+            {
 
-            // Add 1 if you want to reset the superquadric filter, 0 otherwise
-            if (reset)
-                cmd.addInt(1);
-            else
-                cmd.addInt(0);
+                Bottle cmd;
+                cmd.addString("get_superq_filtered");
 
-            superqRpc.write(cmd, superq_b);
+                deque<Vector> pc;
 
-            yInfo()<<"Received superquadric: "<<superq_b.toString();
+                stringstream ss;
 
-            superq_received=true;
+                Bottle &in0=cmd.addList();
+
+                for (size_t k=0; k<n_pc; k++)
+                {
+                    ss<<k;
+
+                    pc.clear();
+                    if (blob_points.size()>1)
+                    {
+                        pc=get3Dpoints(ImgIn);
+                    }
+
+                    Bottle &in1=in0.addList();
+                    in1.addString("point_cloud_" + ss.str());
+
+                    for (size_t i=0; i<points.size(); i++)
+                    {
+                        Bottle &in=in1.addList();
+                        in.addDouble(points[i][0]);
+                        in.addDouble(points[i][1]);
+                        in.addDouble(points[i][2]);
+                    }
+                }
+
+                go_on=false;
+
+                // Add 1 if you want to reset the superquadric filter, 0 otherwise
+                if (reset)
+                    cmd.addInt(1);
+                else
+                    cmd.addInt(0);
+
+                superqRpc.write(cmd, superq_b);
+
+                yInfo()<<"Received superquadric: "<<superq_b.toString();
+
+                superq_received=true;
+            }
         }
         else if (online==false)
             superq_received=true;
@@ -651,13 +694,15 @@ public:
     }
 
     /***********************************************************************/
-    void get3Dpoints(ImageOf<PixelRgb>  *ImgIn)
+    deque<Vector> get3Dpoints(ImageOf<PixelRgb>  *ImgIn)
     {
         Bottle cmd,reply;
         cmd.addString("Points");
         int count_blob=0;
 
-        points.clear();
+        deque<Vector> p;
+
+        p.clear();
 
         for (size_t i=0; i<blob_points.size(); i++)
         {
@@ -681,7 +726,7 @@ public:
 
                 if ((norm(point)>0))
                 {
-                    points.push_back(point);
+                    p.push_back(point);
                 }
             }
 
@@ -698,8 +743,10 @@ public:
         else
         {
             yError("[SuperqComputation]: SFM reply is fail!");
-            points.clear();
+            p.clear();
         }
+
+        return p;
     }
 
     /****************************************************************/
