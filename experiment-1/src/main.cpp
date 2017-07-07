@@ -437,49 +437,50 @@ public:
             }
             else
             {
+                Bottle cmd, reply;
 
-                Bottle cmd;
-                cmd.addString("get_superq_filtered");
+                if (reset)
+                {
+                    cmd.addString("reset_filter");
+                    superqRpc.write(cmd, reply);
+                }
 
-                deque<Vector> pc;
-
-                Bottle &in0=cmd.addList();
+                cmd.clear();
+                reply.clear();
 
                 for (size_t k=0; k<n_pc; k++)
                 {
-                    stringstream ss;
-                    ss<<k;
+                    cmd.addString("send_point_cloud");
+
+                    deque<Vector> pc;
+
+                    Bottle &in0=cmd.addList();
 
                     pc.clear();
+
                     if (blob_points.size()>1)
                     {
                         ImgIn=portImgIn.read();
                         pc=get3Dpoints(ImgIn);
                     }
 
-                    Bottle &in1=in0.addList();
-                    in1.addString("point_cloud_" + ss.str());
-
                     for (size_t i=0; i<points.size(); i++)
                     {
-                        Bottle &in=in1.addList();
+                        Bottle &in=in0.addList();
                         in.addDouble(points[i][0]);
                         in.addDouble(points[i][1]);
                         in.addDouble(points[i][2]);
                     }
+
+                    superqRpc.write(cmd, reply);
                 }
 
+                cmd.clear();
+                reply.clear();
+
+                cmd.addString("get_superq_filtered");
+
                 go_on=false;
-
-                // Add 1 if you want to reset the superquadric filter, 0 otherwise
-                if (reset)
-                    cmd.addInt(1);
-                else
-                    cmd.addInt(0);
-
-                cmd.addInt(n_pc);
-
-cout<<"command asked "<<cmd.toString()<<endl;
 
                 superqRpc.write(cmd, superq_b);
 
