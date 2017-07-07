@@ -448,6 +448,8 @@ public:
                 cmd.clear();
                 reply.clear();
 
+                yDebug()<<"cmd "<<cmd.toString();
+
                 for (size_t k=0; k<n_pc; k++)
                 {
                     cmd.addString("send_point_cloud");
@@ -472,6 +474,8 @@ public:
                         in.addDouble(points[i][2]);
                     }
 
+yDebug()<<"cmd "<<cmd.toString();
+
                     superqRpc.write(cmd, reply);
                 }
 
@@ -479,6 +483,8 @@ public:
                 reply.clear();
 
                 cmd.addString("get_superq_filtered");
+
+yDebug()<<"cmd "<<cmd.toString();
 
                 go_on=false;
 
