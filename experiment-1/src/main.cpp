@@ -406,7 +406,7 @@ public:
 
         if (blob_points.size()>1)
         {
-            points=get3Dpoints(ImgIn);
+            points=get3Dpoints(ImgIn);           
         }
 
         if ((go_on==true) && (superq_received==false) && (online==true))
@@ -443,17 +443,17 @@ public:
 
                 deque<Vector> pc;
 
-                stringstream ss;
-
                 Bottle &in0=cmd.addList();
 
                 for (size_t k=0; k<n_pc; k++)
                 {
+                    stringstream ss;
                     ss<<k;
 
                     pc.clear();
                     if (blob_points.size()>1)
                     {
+                        ImgIn=portImgIn.read();
                         pc=get3Dpoints(ImgIn);
                     }
 
@@ -476,6 +476,10 @@ public:
                     cmd.addInt(1);
                 else
                     cmd.addInt(0);
+
+                cmd.addInt(n_pc);
+
+cout<<"command asked "<<cmd.toString()<<endl;
 
                 superqRpc.write(cmd, superq_b);
 
