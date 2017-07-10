@@ -448,11 +448,9 @@ public:
                 cmd.clear();
                 reply.clear();
 
-                yDebug()<<"cmd "<<cmd.toString();
-
                 for (size_t k=0; k<n_pc; k++)
                 {
-                    cmd.addString("send_point_cloud");
+                    cmd.addString("send_point_clouds");
 
                     deque<Vector> pc;
 
@@ -466,25 +464,21 @@ public:
                         pc=get3Dpoints(ImgIn);
                     }
 
-                    for (size_t i=0; i<points.size(); i++)
+                    for (size_t i=0; i<pc.size(); i++)
                     {
                         Bottle &in=in0.addList();
-                        in.addDouble(points[i][0]);
-                        in.addDouble(points[i][1]);
-                        in.addDouble(points[i][2]);
+                        in.addDouble(pc[i][0]);
+                        in.addDouble(pc[i][1]);
+                        in.addDouble(pc[i][2]);
                     }
 
-yDebug()<<"cmd "<<cmd.toString();
-
                     superqRpc.write(cmd, reply);
+
+                    cmd.clear();
+                    reply.clear();
                 }
 
-                cmd.clear();
-                reply.clear();
-
                 cmd.addString("get_superq_filtered");
-
-yDebug()<<"cmd "<<cmd.toString();
 
                 go_on=false;
 
