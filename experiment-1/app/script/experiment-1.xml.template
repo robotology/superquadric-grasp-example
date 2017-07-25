@@ -1,22 +1,15 @@
 <application>
-    <name>experiment-1-withSFM</name>
-
-    <dependencies>
-        <port>/lbpExtract/rpc:i</port>
-        <port>/memory/rpc</port>
-        <port>/SFM/rpc/</port>
-        <port>/icub/camcalib/left/out</port>
-    </dependencies>
+    <name>experiment-1</name>
     
     <module>
        <name>experiment-1</name>
        <parameters> --from config.ini </parameters>
-       <node>icub21</node>
+       <node>r1-console-linux</node>
     </module>
 
     <module>
        <name>testing-module</name>
-       <node>icub21</node>
+       <node>r1-console-linux</node>
     </module>
    
     <connection>
@@ -32,8 +25,8 @@
     </connection>
 
     <connection>
-        <from>/experiment-1/SFM:rpc</from>
-        <to>/SFM/rpc</to>
+        <from>/experiment-1/3d:rpc</from>
+        <to>/RGBD2PointCloud/rpc</to>
         <protocol>tcp</protocol>
     </connection>
 
@@ -62,8 +55,8 @@
     </connection>
 
     <connection>
-        <from>/testing-module/SFM:rpc</from>
-        <to>/SFM/rpc</to>
+        <from>/testing-module/RGBD:rpc</from>
+        <to>/RGBD2PointCloud/rpc</to>
         <protocol>tcp</protocol>
     </connection>
 
@@ -82,12 +75,12 @@
     <module>
        <name>superquadric-model</name>
         <parameters> --from config.ini </parameters>
-       <node>icub21</node>
+       <node>r1-console-linux</node>
     </module>
     <module>
        <name>yarpview</name>
        <parameters>--name /dispSuperq --out /dispBlobs/out --x 1600 --y 370 --w 600 --h 600 --p 200</parameters>
-       <node>icub22</node>
+       <node>r1-console-linux</node>
     </module>
 
     <connection>
@@ -97,7 +90,7 @@
     </connection>
 
     <connection>
-        <from>/icub/camcalib/left/out</from>
+        <from>/depthCamera/rgbImage:o</from>
         <to>/superquadric-model/img:i</to>
         <protocol>tcp</protocol>
     </connection>
@@ -111,7 +104,7 @@
  <module>
        <name>superquadric-grasp</name>
        <parameters> --from config.ini </parameters>
-       <node>icub21</node>
+       <node>r1-console-linux</node>
     </module>
 
     <module>
@@ -127,9 +120,39 @@
     </connection>
 
     <connection>
-        <from>/icub/camcalib/left/out</from>
+        <from>/depthCamera/rgbImage:o</from>
         <to>/superquadric-grasp/img:i</to>
         <protocol>udp</protocol>
+    </connection>
+
+    <connection>
+        <from>/cer_gaze-controller/state:o</from>
+        <to>/superquadric-model/frame:i</to>
+        <protocol>tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/cer_gaze-controller/state:o</from>
+        <to>/superquadric-grasp/frame:i</to>
+        <protocol>tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/cer_gaze-controller/state:o</from>
+        <to>/experiment-1/frame:i</to>
+        <protocol>tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/cer_gaze-controller/state:o</from>
+        <to>/testing-module/frame:i</to>
+        <protocol>tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/superquadric-grasp/motor:o</from>
+        <to>/cer_gaze-controller/target:i</to>
+        <protocol>tcp</protocol>
     </connection>
 
 </application>

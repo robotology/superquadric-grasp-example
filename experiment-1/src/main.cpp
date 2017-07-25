@@ -47,15 +47,17 @@ class ExperimentOne : public RFModule,
     string objname;
 
     vector<cv::Point> contour;
-    deque<cv::Point> blob_points;
+    deque<Vector> blob_points;
     deque<Vector> points;
 
     RpcClient portBlobRpc;
     RpcClient portOPCrpc;
-    RpcClient portSFMRpc;
+    RpcClient port3DpointsRpc;
     RpcClient superqRpc;
     RpcClient graspRpc;
     RpcServer portRpc;
+
+    BufferedPort<Property > portFrameIn;
 
     Mutex mutex;
 
@@ -78,9 +80,6 @@ class ExperimentOne : public RFModule,
 
     ResourceFinder *rf;
 
-    ImageOf<PixelRgb> *ImgIn;
-    BufferedPort<ImageOf<PixelRgb> > portImgIn;
-
 public:
 
     /************************************************************************/
@@ -96,7 +95,7 @@ public:
         for (size_t i=0; i<blob_points.size(); i++)
         {
             Bottle &b=blob.addList();
-            b.addDouble(blob_points[i].x); b.addDouble(blob_points[i].y);
+            b.addDouble(blob_points[i][0]); b.addDouble(blob_points[i][1]);
         }
 
         return blob;
@@ -335,10 +334,12 @@ public:
 
         portBlobRpc.open("/experiment-1/blob:rpc");
         portOPCrpc.open("/experiment-1/OPC:rpc");
-        portSFMRpc.open("/experiment-1/SFM:rpc");
+        port3DpointsRpc.open("/experiment-1/3d:rpc");
         superqRpc.open("/experiment-1/superq:rpc");
         graspRpc.open("/experiment-1/grasp:rpc");
         portRpc.open("/experiment-1/rpc");
+
+        portFrameIn.open("/experiment-1/frame:i");
 
         attach(portRpc);
 
@@ -359,12 +360,15 @@ public:
             portBlobRpc.close();
         if (portOPCrpc.asPort().isOpen())
             portOPCrpc.close();
-        if (portSFMRpc.asPort().isOpen())
-            portSFMRpc.close();
+        if (port3DpointsRpc.asPort().isOpen())
+            port3DpointsRpc.close();
         if (superqRpc.asPort().isOpen())
             superqRpc.close();
         if (graspRpc.asPort().isOpen())
             graspRpc.close();
+
+        if (!portFrameIn.isClosed())
+            portFrameIn.close();
 
         return true;
     }
@@ -384,7 +388,8 @@ public:
                 }
                 else
                 {
-                    blob_points.push_back(cv::Point(0,0));
+                    Vector aux(2,0.0);
+                    blob_points.push_back(aux);
                 }
             }
             else if (method=="name")
@@ -397,17 +402,19 @@ public:
                 }
                 else
                 {
-                    blob_points.push_back(cv::Point(0,0));
+                    Vector aux(2,0.0);
+                    blob_points.push_back(aux);
                 }
             }
         }
 
-        ImgIn=portImgIn.read();
-
         if (blob_points.size()>1)
         {
-            points=get3Dpoints(ImgIn);           
+            points=get3Dpoints();
         }
+
+        if (points.size()>0)
+            points=fromCameraToRoot(points);
 
         if ((go_on==true) && (superq_received==false) && (online==true))
         {
@@ -460,8 +467,7 @@ public:
 
                     if (blob_points.size()>1)
                     {
-                        ImgIn=portImgIn.read();
-                        pc=get3Dpoints(ImgIn);
+                        pc=get3Dpoints();
                     }
 
                     for (size_t i=0; i<pc.size(); i++)
@@ -567,7 +573,10 @@ public:
                 {
                     if (Bottle *blob_pair=blob_list->get(i).asList())
                     {
-                        blob_points.push_back(cv::Point(blob_pair->get(0).asInt(),blob_pair->get(1).asInt()));
+                        Vector aux(2,0.0);
+                        aux[0]=blob_pair->get(0).asDouble();
+                        aux[1]=blob_pair->get(1).asDouble();
+                        blob_points.push_back(aux);
                     }
                     else
                     {
@@ -698,46 +707,130 @@ public:
         }
     }
 
+//    /***********************************************************************/
+//    deque<Vector> get3Dpoints()
+//    {
+//        Bottle cmd,reply;
+//        cmd.addString("Points");
+//        int count_blob=0;
+
+//        deque<Vector> p;
+
+//        p.clear();
+
+//        for (size_t i=0; i<blob_points.size(); i++)
+//        {
+//            cv::Point single_point=blob_points[i];
+//            cmd.addInt(single_point.x);
+//            cmd.addInt(single_point.y);
+//        }
+
+//        if (portSFMRpc.write(cmd,reply))
+//        {
+//            count_blob=0;
+
+//            for (int idx=0;idx<reply.size();idx+=3)
+//            {
+//                Vector point(6,0.0);
+//                point[0]=reply.get(idx+0).asDouble();
+//                point[1]=reply.get(idx+1).asDouble();
+//                point[2]=reply.get(idx+2).asDouble();
+
+//                count_blob+=2;
+
+//                if ((norm(point)>0))
+//                {
+//                    p.push_back(point);
+//                }
+//            }
+
+//            if (points.size()<=0)
+//            {
+//                yError("[SuperqComputation]: Some problems in point acquisition!");
+//            }
+//            else
+//            {
+//                Vector colors(3,0.0);
+//                colors[0]=255;
+//            }
+//        }
+//        else
+//        {
+//            yError("[SuperqComputation]: SFM reply is fail!");
+//            p.clear();
+//        }
+
+//        return p;
+//    }
+
     /***********************************************************************/
-    deque<Vector> get3Dpoints(ImageOf<PixelRgb>  *ImgIn)
+    deque<Vector> get3Dpoints()
     {
         Bottle cmd,reply;
-        cmd.addString("Points");
+        cmd.addString("get_3D_points");
         int count_blob=0;
 
         deque<Vector> p;
 
         p.clear();
 
+        Bottle &content=cmd.addList();
+
         for (size_t i=0; i<blob_points.size(); i++)
         {
-            cv::Point single_point=blob_points[i];
-            cmd.addInt(single_point.x);
-            cmd.addInt(single_point.y);
+            Bottle &vector=content.addList();
+            vector.addDouble(blob_points[i][0]);
+            vector.addDouble(blob_points[i][1]);
         }
 
-        if (portSFMRpc.write(cmd,reply))
+        cmd.addInt(0);
+
+        yDebug()<<"cmd "<<cmd.toString();
+
+        if (port3DpointsRpc.write(cmd,reply))
         {
+            yDebug()<<"reply "<<reply.toString();
             count_blob=0;
 
-            for (int idx=0;idx<reply.size();idx+=3)
+            Bottle *content=reply.get(0).asList();
+
+            Vector aux;
+
+            Bottle *in1=content->get(0).asList();
+
+            for (size_t i=0; i<in1->size(); i++)
             {
-                Vector point(6,0.0);
-                point[0]=reply.get(idx+0).asDouble();
-                point[1]=reply.get(idx+1).asDouble();
-                point[2]=reply.get(idx+2).asDouble();
+                Bottle *in=in1->get(i).asList();
+                if (in->size()==3)
+                {
+                    aux.resize(6,0.0);
+                    aux[0]=in->get(0).asDouble();
+                    aux[1]=in->get(1).asDouble();
+                    aux[2]=in->get(2).asDouble();
+                    aux[3]=255.0;
+                    aux[4]=0.0;
+                    aux[5]=0.0;
+                }
+                else if (in->size()==6)
+                {
+                    aux.resize(6,0.0);
+                    aux[0]=in->get(0).asDouble();
+                    aux[1]=in->get(1).asDouble();
+                    aux[2]=in->get(2).asDouble();
+                    aux[3]=in->get(3).asDouble();
+                    aux[4]=in->get(4).asDouble();
+                    aux[5]=in->get(5).asDouble();
+                }
 
                 count_blob+=2;
 
-                if ((norm(point)>0))
-                {
-                    p.push_back(point);
-                }
+                if ((norm(aux)>0))
+                    p.push_back(aux);;
             }
 
-            if (points.size()<=0)
+            if (p.size()<=0)
             {
-                yError("[SuperqComputation]: Some problems in point acquisition!");
+                yError(" Some problems in point acquisition!");
             }
             else
             {
@@ -747,11 +840,72 @@ public:
         }
         else
         {
-            yError("[SuperqComputation]: SFM reply is fail!");
+            yError(" RGBD reply is fail!");
             p.clear();
         }
 
         return p;
+    }
+
+    /***********************************************************************/
+    deque<Vector> fromCameraToRoot(deque<Vector> &points)
+    {
+        Property *frame_info=portFrameIn.read(false);
+        Vector x(3);
+        Vector o(4);
+
+        deque<Vector> points_rotated;
+        points_rotated.clear();
+
+        if (frame_info!=NULL)
+        {
+            Bottle &pose_b=frame_info->findGroup("depth");
+            cout<<" Bottle pose "<<pose_b.toString();
+            Bottle *pose=pose_b.get(1).asList();
+            x[0]=pose->get(0).asDouble();
+            x[1]=pose->get(1).asDouble();
+            x[2]=pose->get(2).asDouble();
+
+            cout<<"pose 0 "<<pose->get(0).asDouble()<<endl;
+
+            o[0]=pose->get(3).asDouble();
+            o[1]=pose->get(4).asDouble();
+            o[2]=pose->get(5).asDouble();
+            o[3]=pose->get(6).asDouble();
+
+            Matrix H;
+            H.resize(4,4);
+            H=axis2dcm(o);
+            H.setSubcol(x,0,3);
+            H(3,3)=1;
+
+            cout<<"H "<<H.toString()<<endl;
+            //H=SE3inv(H);
+
+            cout<<"Out from depth "<<frame_info->toString()<<endl;
+            cout<<"x "<<x.toString()<<endl;
+            cout<<"o "<<o.toString()<<endl;
+
+            if (norm(x)!=0.0 && norm(o)!=0.0)
+            {
+                points_rotated.clear();
+                for (size_t i=0; i<points.size(); i++)
+                {
+                    Vector aux;
+                    aux.resize(4,1.0);
+                    aux.setSubvector(0,points[i].subVector(0,2));
+
+                    Vector aux2(6);
+                    aux2.setSubvector(0,(H*aux).subVector(0,2));
+                    aux2[3]=points[i][3]; aux2[4]=points[i][4]; aux2[5]=points[i][5];
+                    points_rotated.push_back(aux2);
+                }
+            }
+        }
+        else
+          yError()<<"Frame info null";
+
+        return points_rotated;
     }
 
     /****************************************************************/
