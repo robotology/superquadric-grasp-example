@@ -632,7 +632,7 @@ public:
                         Bottle &info3=info.addList();
                         info3.addString("propSet");
                         Bottle &info4=info3.addList();
-                        info4.addString("position_2d_left");
+                        info4.addString("position_2d");
                     }
                     else
                     {
@@ -656,7 +656,7 @@ public:
                         {
                             if (Bottle *b=reply.get(1).asList())
                             {
-                                if (Bottle *b1=b->find("position_2d_left").asList())
+                                if (Bottle *b1=b->find("position_2d").asList())
                                 {
                                     cv::Point p1,p2,p;
                                     p1.x=b1->get(0).asInt();
@@ -669,7 +669,7 @@ public:
                                 }
                                 else
                                 {
-                                    yError("position_2d_left field not found in the OPC reply!");
+                                    yError("position_2d field not found in the OPC reply!");
                                     contour.clear();
                                 }
                             }
@@ -785,11 +785,8 @@ public:
 
         cmd.addInt(0);
 
-        yDebug()<<"cmd "<<cmd.toString();
-
         if (port3DpointsRpc.write(cmd,reply))
         {
-            yDebug()<<"reply "<<reply.toString();
             count_blob=0;
 
             Bottle *content=reply.get(0).asList();
@@ -860,13 +857,10 @@ public:
         if (frame_info!=NULL)
         {
             Bottle &pose_b=frame_info->findGroup("depth");
-            cout<<" Bottle pose "<<pose_b.toString();
             Bottle *pose=pose_b.get(1).asList();
             x[0]=pose->get(0).asDouble();
             x[1]=pose->get(1).asDouble();
             x[2]=pose->get(2).asDouble();
-
-            cout<<"pose 0 "<<pose->get(0).asDouble()<<endl;
 
             o[0]=pose->get(3).asDouble();
             o[1]=pose->get(4).asDouble();
@@ -878,13 +872,6 @@ public:
             H=axis2dcm(o);
             H.setSubcol(x,0,3);
             H(3,3)=1;
-
-            cout<<"H "<<H.toString()<<endl;
-            //H=SE3inv(H);
-
-            cout<<"Out from depth "<<frame_info->toString()<<endl;
-            cout<<"x "<<x.toString()<<endl;
-            cout<<"o "<<o.toString()<<endl;
 
             if (norm(x)!=0.0 && norm(o)!=0.0)
             {
