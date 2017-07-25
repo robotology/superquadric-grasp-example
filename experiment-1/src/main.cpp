@@ -49,6 +49,7 @@ class ExperimentOne : public RFModule,
     vector<cv::Point> contour;
     deque<Vector> blob_points;
     deque<Vector> points;
+    deque<Vector> points_rotated;
 
     RpcClient portBlobRpc;
     RpcClient portOPCrpc;
@@ -413,8 +414,16 @@ public:
             points=get3Dpoints();
         }
 
+        cout<<"points size "<<points.size()<<endl;
+
         if (points.size()>0)
-            points=fromCameraToRoot(points);
+        {
+            points_rotated.clear();
+            points_rotated=fromCameraToRoot(points);
+
+        }
+
+cout<<"points size "<<points.size()<<endl;
 
         if ((go_on==true) && (superq_received==false) && (online==true))
         {
@@ -426,12 +435,13 @@ public:
 
                 Bottle &in1=cmd.addList();
 
-                for (size_t i=0; i<points.size(); i++)
+                for (size_t i=0; i<points_rotated.size(); i++)
                 {
+                    cout<<"points 3d "<<points_rotated[i].toString()<<endl;
                     Bottle &in=in1.addList();
-                    in.addDouble(points[i][0]);
-                    in.addDouble(points[i][1]);
-                    in.addDouble(points[i][2]);
+                    in.addDouble(points_rotated[i][0]);
+                    in.addDouble(points_rotated[i][1]);
+                    in.addDouble(points_rotated[i][2]);
                 }
 
                 go_on=false;
@@ -470,12 +480,19 @@ public:
                         pc=get3Dpoints();
                     }
 
-                    for (size_t i=0; i<pc.size(); i++)
+                    if (pc.size()>0)
+                    {
+                        points_rotated.clear();
+                        points_rotated=fromCameraToRoot(pc);
+
+                    }
+
+                    for (size_t i=0; i<points_rotated.size(); i++)
                     {
                         Bottle &in=in0.addList();
-                        in.addDouble(pc[i][0]);
-                        in.addDouble(pc[i][1]);
-                        in.addDouble(pc[i][2]);
+                        in.addDouble(points_rotated[i][0]);
+                        in.addDouble(points_rotated[i][1]);
+                        in.addDouble(points_rotated[i][2]);
                     }
 
                     superqRpc.write(cmd, reply);
