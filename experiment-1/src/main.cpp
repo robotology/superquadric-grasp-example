@@ -414,16 +414,12 @@ public:
             points=get3Dpoints();
         }
 
-        cout<<"points size "<<points.size()<<endl;
-
         if (points.size()>0)
         {
             points_rotated.clear();
             points_rotated=fromCameraToRoot(points);
 
         }
-
-cout<<"points size "<<points.size()<<endl;
 
         if ((go_on==true) && (superq_received==false) && (online==true))
         {
@@ -724,62 +720,6 @@ cout<<"points size "<<points.size()<<endl;
         }
     }
 
-//    /***********************************************************************/
-//    deque<Vector> get3Dpoints()
-//    {
-//        Bottle cmd,reply;
-//        cmd.addString("Points");
-//        int count_blob=0;
-
-//        deque<Vector> p;
-
-//        p.clear();
-
-//        for (size_t i=0; i<blob_points.size(); i++)
-//        {
-//            cv::Point single_point=blob_points[i];
-//            cmd.addInt(single_point.x);
-//            cmd.addInt(single_point.y);
-//        }
-
-//        if (portSFMRpc.write(cmd,reply))
-//        {
-//            count_blob=0;
-
-//            for (int idx=0;idx<reply.size();idx+=3)
-//            {
-//                Vector point(6,0.0);
-//                point[0]=reply.get(idx+0).asDouble();
-//                point[1]=reply.get(idx+1).asDouble();
-//                point[2]=reply.get(idx+2).asDouble();
-
-//                count_blob+=2;
-
-//                if ((norm(point)>0))
-//                {
-//                    p.push_back(point);
-//                }
-//            }
-
-//            if (points.size()<=0)
-//            {
-//                yError("[SuperqComputation]: Some problems in point acquisition!");
-//            }
-//            else
-//            {
-//                Vector colors(3,0.0);
-//                colors[0]=255;
-//            }
-//        }
-//        else
-//        {
-//            yError("[SuperqComputation]: SFM reply is fail!");
-//            p.clear();
-//        }
-
-//        return p;
-//    }
-
     /***********************************************************************/
     deque<Vector> get3Dpoints()
     {
@@ -890,7 +830,7 @@ cout<<"points size "<<points.size()<<endl;
             H.setSubcol(x,0,3);
             H(3,3)=1;
 
-            if (norm(x)!=0.0 && norm(o)!=0.0)
+            if ((norm(x)>0.0) && (norm(o)>0.0))
             {
                 points_rotated.clear();
                 for (size_t i=0; i<points.size(); i++)
