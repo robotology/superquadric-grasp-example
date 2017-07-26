@@ -138,6 +138,30 @@
     </connection>
 
     <connection>
+        <from>/cer_reaching-controller/right/state:o</from>
+        <to>/superquadric-grasp/right/state:i</to>
+        <protocol>tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/cer_reaching-controller/left/state:o</from>
+        <to>/superquadric-grasp/left/state:i</to>
+        <protocol>tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/superquadric-grasp/left/reach:rpc</from>
+        <to>/cer_reaching-controller/left/rpc</to>      
+        <protocol>tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/superquadric-grasp/right/reach:rpc</from>
+        <to>/cer_reaching-controller/right/rpc</to>      
+        <protocol>tcp</protocol>
+    </connection>
+
+    <connection>
         <from>/cer_gaze-controller/state:o</from>
         <to>/experiment-1/frame:i</to>
         <protocol>tcp</protocol>
