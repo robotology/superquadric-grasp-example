@@ -438,9 +438,9 @@ public:
                     in.addDouble(points_rotated[i][0]);
                     in.addDouble(points_rotated[i][1]);
                     in.addDouble(points_rotated[i][2]);
-                    in.addInt(points_rotated[i][3]);
-                    in.addInt(points_rotated[i][4]);
-                    in.addInt(points_rotated[i][5]);
+                    in.addDouble(points_rotated[i][3]);
+                    in.addDouble(points_rotated[i][4]);
+                    in.addDouble(points_rotated[i][5]);
                 }
 
                 go_on=false;
@@ -492,10 +492,12 @@ public:
                         in.addDouble(points_rotated[i][0]);
                         in.addDouble(points_rotated[i][1]);
                         in.addDouble(points_rotated[i][2]);
-                        in.addInt(points_rotated[i][3]);
-                        in.addInt(points_rotated[i][4]);
-                        in.addInt(points_rotated[i][5]);
+                        in.addDouble(points_rotated[i][3]);
+                        in.addDouble(points_rotated[i][4]);
+                        in.addDouble(points_rotated[i][5]);
                     }
+
+                    cout<<"cmd "<<cmd.toString()<<endl;
 
                     superqRpc.write(cmd, reply);
 
@@ -839,6 +841,7 @@ public:
             if ((norm(x)>0.0) && (norm(o)>0.0))
             {
                 points_rotated.clear();
+                cout<<"points size "<<points.size()<<endl;
                 for (size_t i=0; i<points.size(); i++)
                 {
                     if (norm(points[i].subVector(0,2))>0.0)
