@@ -497,8 +497,6 @@ public:
                         in.addDouble(points_rotated[i][5]);
                     }
 
-                    cout<<"cmd "<<cmd.toString()<<endl;
-
                     superqRpc.write(cmd, reply);
 
                     cmd.clear();
@@ -841,7 +839,6 @@ public:
             if ((norm(x)>0.0) && (norm(o)>0.0))
             {
                 points_rotated.clear();
-                cout<<"points size "<<points.size()<<endl;
                 for (size_t i=0; i<points.size(); i++)
                 {
                     if (norm(points[i].subVector(0,2))>0.0)
@@ -937,43 +934,6 @@ public:
             }
 
         }
-                
-        /*Bottle *dim=estimated_superq.find("dimensions").asList();
-
-        if (!estimated_superq.find("dimensions").isNull())
-        {
-            superq_aux[0]=dim->get(0).asDouble(); superq_aux[1]=dim->get(1).asDouble(); superq_aux[2]=dim->get(2).asDouble();
-        }
-
-        Bottle *shape=estimated_superq.find("exponents").asList();
-
-        if (!estimated_superq.find("exponents").isNull())
-        {
-            superq_aux[3]=shape->get(0).asDouble(); superq_aux[4]=shape->get(1).asDouble();
-        }
-
-        Bottle *exp=estimated_superq.find("exponents").asList();
-
-        if (!estimated_superq.find("exponents").isNull())
-        {
-            superq_aux[3]=exp->get(0).asDouble(); superq_aux[4]=exp->get(1).asDouble();
-        }
-
-        Bottle *center=estimated_superq.find("center").asList();
-
-        if (!estimated_superq.find("center").isNull())
-        {
-            superq_aux[5]=center->get(0).asDouble(); superq_aux[6]=center->get(1).asDouble(); superq_aux[7]=center->get(2).asDouble();
-        }
-
-        Bottle *orientation=estimated_superq.find("orientation").asList();
-
-        if (!estimated_superq.find("orientation").isNull())
-        {
-            Vector axis(4,0.0);
-            axis[0]=orientation->get(0).asDouble(); axis[1]=orientation->get(1).asDouble(); axis[2]=orientation->get(2).asDouble(); axis[3]=orientation->get(3).asDouble();
-            superq_aux.setSubvector(8,axis);
-        }*/
 
         Bottle &b1=cmd.addList();
         Bottle &b2=b1.addList();
