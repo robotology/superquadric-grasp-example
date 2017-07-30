@@ -438,6 +438,9 @@ public:
                     in.addDouble(points_rotated[i][0]);
                     in.addDouble(points_rotated[i][1]);
                     in.addDouble(points_rotated[i][2]);
+                    in.addInt(points_rotated[i][3]);
+                    in.addInt(points_rotated[i][4]);
+                    in.addInt(points_rotated[i][5]);
                 }
 
                 go_on=false;
@@ -489,6 +492,9 @@ public:
                         in.addDouble(points_rotated[i][0]);
                         in.addDouble(points_rotated[i][1]);
                         in.addDouble(points_rotated[i][2]);
+                        in.addInt(points_rotated[i][3]);
+                        in.addInt(points_rotated[i][4]);
+                        in.addInt(points_rotated[i][5]);
                     }
 
                     superqRpc.write(cmd, reply);
