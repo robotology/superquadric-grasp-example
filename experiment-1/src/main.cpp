@@ -184,11 +184,10 @@ public:
     /************************************************************************/
     bool acquire_superq()
     {
-        if (superq_correct==false)
-        {
-            go_on=true;
-            superq_received=false;
-        }
+        go_on=true;
+        superq_received=false;
+
+        Time::delay(5.0);
 
         return superq_correct;
     }
@@ -200,6 +199,8 @@ public:
         {
             go_on=true;
             pose_received=false;
+            
+            Time::delay(2.0);
 
             return true;
         }
@@ -501,7 +502,6 @@ public:
             else
             {
                 Bottle cmd, reply;
-                superq_correct=false;
 
                 if (reset)
                 {
@@ -557,18 +557,23 @@ public:
 
                 superqRpc.write(cmd, superq_b);
 
-                yInfo()<<"Received superquadric: "<<superq_b.toString();
+                yInfo()<<"Bottle size "<<superq_b.size();
+                if (superq_b.size()>0)
+                {
+                    yInfo()<<"Received superquadric: "<<superq_b.toString();
                 
-                cmd.clear();  
-                getBottle(superq_b, cmd);
-                cmd.clear(); 
+                    cmd.clear();                  
+                    getBottle(superq_b, cmd);
+                    cmd.clear(); 
+                    superq_received=true;
+                }
+                else
+                    superq_received=false;
                 
                 if (norm(superq_aux)>0.0)
                     superq_correct=true;
                 else
-                    superq_correct=false;
-
-                superq_received=true;
+                    superq_correct=false;    
             }
         }
         else if (online==false)
