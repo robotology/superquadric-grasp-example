@@ -81,6 +81,8 @@ class ExperimentOne : public RFModule,
 
     ResourceFinder *rf;
 
+    Event event_mov;
+
 public:
 
     /************************************************************************/
@@ -209,12 +211,28 @@ public:
             robot_moving=false;
             go_home=false;
 
-            return true;
+            event_mov.reset();
+            event_mov.wait();
+
+            return robot_moving;
         }
         else
         {
             return false;
         }
+    }
+
+    /************************************************************************/
+    bool open_hand()
+    {
+        Bottle cmd, reply;
+        cmd.addString("open");
+        cmd.addString(hand_for_moving);
+        graspRpc.write(cmd, reply);
+        if (reply.get(0).asString()=="ok")
+            return true;
+        else
+            return false;
     }
 
     /************************************************************************/
@@ -524,7 +542,15 @@ public:
 
             getBottle(superq_b, cmd);
 
+            //Choose hand
+            if (superq_aux[6]<=0.0)
+                hand_for_computation="right";
+            else
+                hand_for_computation="left";
+
             cmd.addString(hand_for_computation);
+
+            yInfo()<<"Chosen hand for computation: "<<hand_for_computation;
 
             yInfo()<<"Command asked "<<cmd.toString();
 
@@ -542,17 +568,24 @@ public:
         {
             Bottle cmd, reply;
             cmd.clear();
-            cmd.addString("move");
+            cmd.addString("move_and_wait");
+            hand_for_moving=hand_for_computation;
             cmd.addString(hand_for_moving);
 
-            yInfo()<<"Asked to move: "<<cmd.toString();
+            yInfo()<<"Asked to move: "<<cmd.toString()<<"with "<<hand_for_moving;
 
             graspRpc.write(cmd, reply);
 
             if (reply.get(0).asString()=="ok")
             {
-                yInfo()<<"The robot is moving";
+                yInfo()<<"The robot has moved";
+                event_mov.signal();
                 robot_moving=true;
+            }
+            else
+            {
+                event_mov.signal();
+                robot_moving=false;
             }
 
             go_on=false;
