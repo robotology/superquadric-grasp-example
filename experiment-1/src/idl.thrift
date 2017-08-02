@@ -159,6 +159,12 @@ service experimentOne_IDL
     */
     string get_object_class();
 
+    /*
+    * Open hand used for moving
+    * @return true/false on success/failure.
+    */
+    bool open_hand();
+
 }
 
 
