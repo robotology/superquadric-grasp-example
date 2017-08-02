@@ -160,10 +160,23 @@ service experimentOne_IDL
     string get_object_class();
 
     /*
+    * Get the current value of choose_hand
+    * @return the current value of choose_hand.
+    */
+    string get_choose_hand();
+
+    /*
     * Open hand used for moving
     * @return true/false on success/failure.
     */
     bool open_hand();
+
+    /*
+    * Open hand used for moving
+    * @param e is the hand to be relaxed
+    * @return true/false on success/failure.
+    */
+    bool relax_hand(1:string e);
 
 }
 

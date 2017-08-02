@@ -75,9 +75,11 @@ class ExperimentOne : public RFModule,
     bool online;   
     bool go_home;
     bool filtered;
+    bool superq_correct;
     bool superq_received;
     bool pose_received;
     bool robot_moving;
+    bool choose_hand;
 
     ResourceFinder *rf;
 
@@ -182,10 +184,13 @@ public:
     /************************************************************************/
     bool acquire_superq()
     {
-        go_on=true;
-        superq_received=false;
+        if (superq_correct==false)
+        {
+            go_on=true;
+            superq_received=false;
+        }
 
-        return true;
+        return superq_correct;
     }
 
     /************************************************************************/
@@ -236,6 +241,19 @@ public:
     }
 
     /************************************************************************/
+    bool relax_hand(const string &entry)
+    {
+        Bottle cmd, reply;
+        cmd.addString("rest");
+        cmd.addString(entry);
+        graspRpc.write(cmd, reply);
+        if (reply.get(0).asString()=="ok")
+            return true;
+        else
+            return false;
+    }
+
+    /************************************************************************/
     bool go_back_home()
     {
         go_home=true;
@@ -274,6 +292,15 @@ public:
     string get_filtered_superq()
     {
         if (filtered)
+            return "on";
+        else
+            return "off";
+    }
+
+     /************************************************************************/
+    string get_choose_hand()
+    {
+        if (choose_hand)
             return "on";
         else
             return "off";
@@ -340,6 +367,7 @@ public:
         reset=(rf.check("reset", Value("off")).asString()=="on");
         hand_for_computation=rf.check("hand_for_computation", Value("both")).asString();
         hand_for_moving=rf.check("hand_for_moving", Value("right")).asString();
+        choose_hand=(rf.check("choose_hand", Value("off")).asString()=="on");
 
         n_pc=rf.check("num_point_cloud", Value(5)).asInt();
 
@@ -366,6 +394,7 @@ public:
         superq_received=false;
         pose_received=false;
         robot_moving=false;
+        superq_correct=false;
 
         superq_aux.resize(12,0.0);
 
@@ -472,6 +501,7 @@ public:
             else
             {
                 Bottle cmd, reply;
+                superq_correct=false;
 
                 if (reset)
                 {
@@ -528,6 +558,15 @@ public:
                 superqRpc.write(cmd, superq_b);
 
                 yInfo()<<"Received superquadric: "<<superq_b.toString();
+                
+                cmd.clear();  
+                getBottle(superq_b, cmd);
+                cmd.clear(); 
+                
+                if (norm(superq_aux)>0.0)
+                    superq_correct=true;
+                else
+                    superq_correct=false;
 
                 superq_received=true;
             }
@@ -535,7 +574,7 @@ public:
         else if (online==false)
             superq_received=true;
 
-        if ((go_on==true) && (superq_received==true) && (pose_received==false))
+        if ((go_on==true) && (superq_received==true) && (pose_received==false) && (superq_correct==true))
         {
             Bottle cmd, reply;
             cmd.addString("get_grasping_pose");
@@ -543,10 +582,13 @@ public:
             getBottle(superq_b, cmd);
 
             //Choose hand
-            if (superq_aux[6]<=0.0)
-                hand_for_computation="right";
-            else
-                hand_for_computation="left";
+            if (choose_hand)
+            {
+                if (superq_aux[6]<=0.0)
+                    hand_for_computation="right";
+                else
+                    hand_for_computation="left";
+            }
 
             cmd.addString(hand_for_computation);
 
@@ -569,7 +611,10 @@ public:
             Bottle cmd, reply;
             cmd.clear();
             cmd.addString("move_and_wait");
-            hand_for_moving=hand_for_computation;
+
+            if (choose_hand)
+                hand_for_moving=hand_for_computation;
+
             cmd.addString(hand_for_moving);
 
             yInfo()<<"Asked to move: "<<cmd.toString()<<"with "<<hand_for_moving;
