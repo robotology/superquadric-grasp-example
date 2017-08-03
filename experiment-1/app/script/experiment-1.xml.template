@@ -19,7 +19,7 @@
        <node>r1-base</node>
     </module>
 
-    <module>
+    <module>superquadric-model
        <name>cer_reaching-controller</name>
        <parameters>--robot cer --arm-type right --verbosity 1 --T 1.0</parameters>
        <node>r1-base</node>
@@ -110,7 +110,7 @@
 
     <module>
        <name>superquadric-model</name>
-        <parameters> --from config.ini </parameters>
+        <parameters> --from config-classes.ini </parameters>
        <node>r1-console-linux</node>
     </module>
     <module>
@@ -139,7 +139,7 @@
 
  <module>
        <name>superquadric-grasp</name>
-       <parameters> --from config.ini </parameters>
+       <parameters> --from config-r1.ini </parameters>
        <node>r1-console-linux</node>
     </module>
 
