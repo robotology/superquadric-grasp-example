@@ -727,6 +727,11 @@ public:
                 point[1]=reply.get(idx+1).asDouble();
                 point[2]=reply.get(idx+2).asDouble();
 
+                PixelRgb px=ImgIn->pixel(blob_points[count_blob].y,blob_points[count_blob].x);
+                point[3]=px.r;
+                point[4]=px.g;
+                point[5]=px.b;
+
                 count_blob+=2;
 
                 if ((norm(point)>0))
@@ -738,11 +743,6 @@ public:
             if (points.size()<=0)
             {
                 yError("[SuperqComputation]: Some problems in point acquisition!");
-            }
-            else
-            {
-                Vector colors(3,0.0);
-                colors[0]=255;
             }
         }
         else
