@@ -72,6 +72,7 @@ class ExperimentOne : public RFModule,
     bool online;   
     bool go_home;
     bool filtered;
+    bool choose_hand;
     bool superq_received;
     bool pose_received;
     bool robot_moving;
@@ -156,6 +157,27 @@ public:
     string get_hand_for_moving()
     {
         return hand_for_moving;
+    }
+
+    /************************************************************************/
+    string get_automatic_hand()
+    {
+        if (choose_hand)
+            return "on";
+        else
+            return "off";
+    }
+
+    /************************************************************************/
+    bool set_automatic_hand(const string &entry)
+    {
+        if (entry=="on" || entry=="off")
+        {
+            choose_hand=(entry=="on");
+            return true;
+        }
+        else
+            return false;
     }
 
     /************************************************************************/
@@ -322,6 +344,7 @@ public:
         reset=(rf.check("reset", Value("off")).asString()=="on");
         hand_for_computation=rf.check("hand_for_computation", Value("both")).asString();
         hand_for_moving=rf.check("hand_for_moving", Value("right")).asString();
+        choose_hand=rf.check("hand_for_moving", Value(false)).asBool();
 
         n_pc=rf.check("num_point_cloud", Value(5)).asInt();
 
@@ -509,6 +532,22 @@ public:
 
             if (reply.size()>0)
                 pose_received=true;
+
+            if (choose_hand)
+            {
+                cmd.clear();
+                cmd.addString("get_best_hand");
+                graspRpc.write(cmd,reply);
+
+                if (reply.get(0).asString()=="right" || reply.get(0).asString()=="left")
+                {
+                    hand_for_moving=reply.get(0).asString();
+                    yInfo()<<"Best hand for grasping the object: "<<reply.get(0).asString();
+                }
+                else
+                    yError()<<"No best pose received!";
+
+            }
 
             go_on=false;
         }

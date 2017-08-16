@@ -121,6 +121,19 @@ service experimentOne_IDL
     string get_hand_for_moving();
 
     /*
+    * Get if automatic selection of the hand is on or off
+    * @return "on" or "off".
+    */
+    string get_automatic_hand();
+
+    /*
+    * Set if automatic selection of the hand is on or off
+    *@param h can be "on" or "off"
+    *@return true/false on success/failure.
+    */
+    bool set_automatic_hand(1: string h);
+
+    /*
     * Set if to ask the filtered superquadric or not.
     * @param entry can be "on" or "off".
     * @return "on" or "off".
