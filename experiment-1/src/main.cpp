@@ -498,8 +498,8 @@ public:
 
                     if (blob_points.size()>1)
                     {
-                        if (filtered==false)
-                            ImgIn=portImgIn.read(false);
+                        // if (filtered==false)
+                        //    ImgIn=portImgIn.read(false);
                         pc=get3Dpoints(ImgIn);
                     }
 
@@ -513,6 +513,7 @@ public:
                         in.addDouble(pc[i][2]);                        
                     }
 
+                    yDebug()<<"asking "<<pc.size();
                     superqRpc.write(cmd, reply);
 
                     yDebug()<<"reply "<<reply.toString();
@@ -786,6 +787,7 @@ public:
             for (int idx=0;idx<reply.size();idx+=3)
             {
                 Vector point(6,0.0);
+
                 point[0]=reply.get(idx+0).asDouble();
                 point[1]=reply.get(idx+1).asDouble();
                 point[2]=reply.get(idx+2).asDouble();
