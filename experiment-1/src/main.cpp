@@ -467,21 +467,16 @@ public:
             }
             else
             {
-                yDebug()<<"1";
                 Bottle cmd, reply;
 
                 if (reset)
                 {
-                    yDebug()<<"2";
                     cmd.addString("reset_filter");
                     superqRpc.write(cmd, reply);
-                    yDebug()<<"3";
                 }
 
                 cmd.clear();
                 reply.clear();
-                
-                cout<<"n pc "<<n_pc<<endl;
 
                 for (size_t k=0; k<n_pc; k++)
                 {
@@ -492,18 +487,12 @@ public:
                     Bottle &in0=cmd.addList();
 
                     pc.clear();
-                    
-                    yDebug()<<"cmd "<<cmd.toString(); 
-                    yDebug()<<"blob "<<blob_points.size();    
+
 
                     if (blob_points.size()>1)
                     {
-                        // if (filtered==false)
-                        //    ImgIn=portImgIn.read(false);
                         pc=get3Dpoints(ImgIn);
                     }
-
-                    yDebug()<<"pc "<<pc.size(); 
 
                     for (size_t i=0; i<pc.size(); i++)
                     {
@@ -513,24 +502,17 @@ public:
                         in.addDouble(pc[i][2]);                        
                     }
 
-                    yDebug()<<"asking "<<pc.size();
                     superqRpc.write(cmd, reply);
-
-                    yDebug()<<"reply "<<reply.toString();
 
                     cmd.clear();
                     reply.clear();
                 }
-
-                yDebug()<<"2";
 
                 cmd.addString("get_superq_filtered");
 
                 go_on=false;
 
                 superqRpc.write(cmd, superq_b);
-
-                yDebug()<<"3";
 
                 yInfo()<<"Received superquadric: "<<superq_b.toString();
 
