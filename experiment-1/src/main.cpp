@@ -362,10 +362,12 @@ public:
         superqRpc.open("/experiment-1/superq:rpc");
         graspRpc.open("/experiment-1/grasp:rpc");
         portRpc.open("/experiment-1/rpc");
+        portImgIn.open("/experiment-1/img:i");
 
         attach(portRpc);
 
         go_on=false;
+        go_home=false;
         superq_received=false;
         pose_received=false;
         robot_moving=false;
@@ -388,6 +390,8 @@ public:
             superqRpc.close();
         if (graspRpc.asPort().isOpen())
             graspRpc.close();
+        if (!portImgIn.isClosed())
+            portImgIn.close();
 
         return true;
     }
@@ -425,15 +429,15 @@ public:
             }
         }
 
-        ImgIn=portImgIn.read();
-
-        if (blob_points.size()>1)
-        {
-            points=get3Dpoints(ImgIn);           
-        }
-
+        
         if ((go_on==true) && (superq_received==false) && (online==true))
         {
+            ImgIn=portImgIn.read(false);
+
+            if (blob_points.size()>1)
+            {
+                points=get3Dpoints(ImgIn);           
+            }
 
             if (!filtered)
             {
@@ -448,6 +452,9 @@ public:
                     in.addDouble(points[i][0]);
                     in.addDouble(points[i][1]);
                     in.addDouble(points[i][2]);
+                    in.addDouble(points[i][3]);
+                    in.addDouble(points[i][4]);
+                    in.addDouble(points[i][5]);
                 }
 
                 go_on=false;
@@ -460,16 +467,21 @@ public:
             }
             else
             {
+                yDebug()<<"1";
                 Bottle cmd, reply;
 
                 if (reset)
                 {
+                    yDebug()<<"2";
                     cmd.addString("reset_filter");
                     superqRpc.write(cmd, reply);
+                    yDebug()<<"3";
                 }
 
                 cmd.clear();
                 reply.clear();
+                
+                cout<<"n pc "<<n_pc<<endl;
 
                 for (size_t k=0; k<n_pc; k++)
                 {
@@ -480,32 +492,44 @@ public:
                     Bottle &in0=cmd.addList();
 
                     pc.clear();
+                    
+                    yDebug()<<"cmd "<<cmd.toString(); 
+                    yDebug()<<"blob "<<blob_points.size();    
 
                     if (blob_points.size()>1)
                     {
-                        ImgIn=portImgIn.read();
+                        if (filtered==false)
+                            ImgIn=portImgIn.read(false);
                         pc=get3Dpoints(ImgIn);
                     }
+
+                    yDebug()<<"pc "<<pc.size(); 
 
                     for (size_t i=0; i<pc.size(); i++)
                     {
                         Bottle &in=in0.addList();
                         in.addDouble(pc[i][0]);
                         in.addDouble(pc[i][1]);
-                        in.addDouble(pc[i][2]);
+                        in.addDouble(pc[i][2]);                        
                     }
 
                     superqRpc.write(cmd, reply);
 
+                    yDebug()<<"reply "<<reply.toString();
+
                     cmd.clear();
                     reply.clear();
                 }
+
+                yDebug()<<"2";
 
                 cmd.addString("get_superq_filtered");
 
                 go_on=false;
 
                 superqRpc.write(cmd, superq_b);
+
+                yDebug()<<"3";
 
                 yInfo()<<"Received superquadric: "<<superq_b.toString();
 
@@ -766,12 +790,17 @@ public:
                 point[1]=reply.get(idx+1).asDouble();
                 point[2]=reply.get(idx+2).asDouble();
 
-                PixelRgb px=ImgIn->pixel(blob_points[count_blob].y,blob_points[count_blob].x);
-                point[3]=px.r;
-                point[4]=px.g;
-                point[5]=px.b;
+                if (ImgIn!=NULL && (filtered==false))
+                {
+                    PixelRgb px=ImgIn->pixel(blob_points[count_blob].x,blob_points[count_blob].y);
+                    point[3]=px.r;
+                    point[4]=px.g;
+                    point[5]=px.b;
+                }
+                //else
+                 //   yInfo()<<"No img received yet!";
 
-                count_blob+=2;
+                count_blob+=1;
 
                 if ((norm(point)>0))
                 {
