@@ -43,7 +43,7 @@ yarp rpc /experiment-1/rpc
 ```
 - `<object_name>` must be the name of one of the objects recognized by th IOL application.
 - `<hand_for_computation>` can be: `right`, `left` or `both`.
-- `<hand_for_moving>` can be: `right` or `left`
+- `<hand_for_moving>` can be: `right` or `left`.
 
 The command:
 - `acquire_superq` executes steps number 1,2,3,4 of the [pipeline](https://github.com/robotology-playground/experiment-new-grasp#experiment-1).
