@@ -6,7 +6,7 @@ The module `experiment-1` implemts a wrapper code for performing the superquadri
 Thiw wrapper code communicates with existing modules developed in [`robotology` repo](https://github.com/robotology) and its structure can be summarized as follow:
 
 
-
+<img src="https://github.com/robotology-playground/experiment-new-grasp/blob/master/experiment-1/misc/298761_Vezzani_Figure3.JPEG" width=400 height=300> <img src="https://github.com/robotology-playground/experiment-new-grasp/blob/master/experiment-1/misc/298761_Vezzani_Figure2.JPEG" width=450 height=300> 
 
 
 
