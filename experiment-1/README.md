@@ -15,15 +15,16 @@ make install
 ## How to run the code
 This code can be launched both on the iCub robot and simulator. However, a complete testing can be executed only on the robot, 
 since it communicates with several modules that are quite hard to be launched on the simulator.
-For launching it on the robot, please:
+For running it on the robot, please:
 1. Launch the `yarprobotinterface`
 2. Launch the basic modules:`iKinGazeCtrl`, `iKinCartsianSolver`- for both right and left arm. 
-3. Launch [IOL]( Launch the basic modules  for the simulator (`yarprobotinterface`, `iKinGazeCtrl`, `iKinCartsianSolver`- for both right and left arm-).)
-4. Launch the [`superquadric-model`](ps://github.com/robotology/superquadric-model) and [`superquadric-grasp`](ps://github.com/robotology/superquadric-grasp),
+3. Launch the [`skinManager`](https://github.com/robotology/icub-main/tree/master/src/modules/skinManager) and `skinManagerGui` and connect. Set the `binarization filter` off and the `compensation gain` and the `contact compensation gain` at the minimum values.
+4. Launch [IOL](https://github.com/robotology/iol ).
+5. Launch the [`superquadric-model`](https://github.com/robotology/superquadric-model) and [`superquadric-grasp`](ps://github.com/robotology/superquadric-grasp),
 the yarpviewers and `experiment-1` module with [this xml](https://github.com/robotology-playground/experiment-new-grasp/blob/master/experiment-1/app/script/experiment-1.xml.template).
 The yarpviewers show respectively the estimated superquadric and the computed grasping pose.
-5. Connect everything.
-6. Interact with the `experiment-1` code.
+6. Connect everything.
+7. Interact with the `experiment-1` code.
 
 Here is an example on how to interact with the wrapper code:
 ```
