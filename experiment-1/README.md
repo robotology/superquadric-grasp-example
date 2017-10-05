@@ -19,7 +19,7 @@ For running it on the robot, please:
 1. Launch the `yarprobotinterface`
 2. Launch the basic modules:`iKinGazeCtrl`, `iKinCartsianSolver`- for both right and left arm. 
 3. Launch the [`skinManager`](https://github.com/robotology/icub-main/tree/master/src/modules/skinManager) and `skinManagerGui` and connect. Set the `binarization filter` off and the `compensation gain` and the `contact compensation gain` at the minimum values.
-4. Launch [`IO`L](https://github.com/robotology/iol ).
+4. Launch [`IOL`](https://github.com/robotology/iol ).
 5. Launch the [`superquadric-model`](https://github.com/robotology/superquadric-model) and [`superquadric-grasp`](https://github.com/robotology/superquadric-grasp),
 the yarpviewers and `experiment-1` module with [this xml](https://github.com/robotology-playground/experiment-new-grasp/blob/master/experiment-1/app/script/experiment-1.xml.template).
 The yarpviewers show respectively the estimated superquadric and the computed grasping pose.
