@@ -52,4 +52,4 @@ The command:
 
 
 ## Documentation
-The online documentation of this module is available [here]().
+The online documentation of this module is available [here](http://robotology.github.com/superquadric-grasp-example).
