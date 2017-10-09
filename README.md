@@ -20,4 +20,7 @@ This wrapper code communicates with existing modules developed in [`robotology r
 ## Use case
 Information about how to compile,  launch and interact with the module is provided in the [`experiment-1 folder`](https://github.com/robotology-playground/experiment-new-grasp/tree/master/experiment-1).
 
+## Documentation
+The online documentation of this module is available [here](http://robotology.github.com/superquadric-grasp-example).
+
 [1] G. Vezzani, U. Pattacini and L. Natale, "A grasping approach based on superquadric models", IEEE-RAS International Conference on Robotics and Automation 2017, pp 1579-1586.
