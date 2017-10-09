@@ -100,7 +100,7 @@ service experimentOne_IDL
     * @param entry can be "right", "left" or "both".
     * @return true/false on success/failure.
     */
-    bool set_hand_for_computation(1: string h);
+    bool set_hand_for_computation(1: string entry);
     
     /**
     * Get the hand for pose computation.
@@ -129,10 +129,10 @@ service experimentOne_IDL
 
     /**
     * Set if automatic selection of the hand is on or off
-    *@param h can be "on" or "off"
+    *@param entry can be "on" or "off"
     *@return true/false on success/failure.
     */
-    bool set_automatic_hand(1: string h);
+    bool set_automatic_hand(1: string entry);
 
     /**
     * Set if to ask the filtered superquadric or not.
@@ -141,33 +141,33 @@ service experimentOne_IDL
     */
     bool set_filtered_superq(1: string entry);
 
-    /*
+    /**
     * Get if to ask the filtered superquadric or not.
     * @return true/false on success/failure.
     */
     string get_filtered_superq();
     
-    /*
+    /**
     * Set if to reset the filtered superquadric or not.
     * @param entry can be "on" or "off".
     * @return "on" or "off".
     */
     bool set_reset_filter(1: string entry);
 
-    /*
+    /**
     * Get if to reset the filtered superquadric or not.
     * @return true/false on success/failure.
     */
     string get_reset_filter();
 
-    /*
+    /**
     * Set the current object class
     * @param entry the name of the object class
     * @return true/false on success/failure.
     */
     bool set_object_class(1: string entry);
 
-    /*
+    /**
     * Get the current object class
     * @return the current object class.
     */
