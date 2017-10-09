@@ -38,6 +38,13 @@ using namespace yarp::dev;
 using namespace yarp::sig;
 using namespace yarp::math;
 
+/**
+ * @brief The ExperimentOne class provides a wrapper for the superquadric
+ * modeling and grasping frameworks.
+ * It implements a state machine, that communicates with external modules,
+ * including the superquadric-model and -grasp modules,
+ * for making the iCub grasping an unknown object.
+ */
 class ExperimentOne : public RFModule,
                     experimentOne_IDL
 {
@@ -90,6 +97,10 @@ public:
         return this->yarp().attachAsServer(source);
     }
 
+    /**
+    * Send the current 2D blob
+    *@return a bottle containing all the 2D points of the blob
+    */
     /************************************************************************/
     Bottle  get_Blob()
     {
@@ -103,6 +114,12 @@ public:
         return blob;
     }
 
+    /**
+    * Set the name of the object
+    * (stored by the object property collector).
+    * @param entry is the name of the object
+    * @return true/false on success/failure.
+    */
     /************************************************************************/
     bool set_object_name(const string &object_name)
     {
@@ -113,12 +130,21 @@ public:
         return true;
     }
 
+    /**
+    * Get the name of the object
+    * @return a string with the name of the object.
+    */
     /************************************************************************/
     string get_object_name()
     {
         return objname;
     }
 
+    /**
+    * Set the hand for pose computation.
+    * @param entry can be "right", "left" or "both".
+    * @return true/false on success/failure.
+    */
     /************************************************************************/
     bool set_hand_for_computation(const string &h)
     {
@@ -133,12 +159,21 @@ public:
             return false;
     }
 
+    /**
+    * Get the hand for pose computation.
+    * @return "right", "left" or "both".
+    */
     /************************************************************************/
     string get_hand_for_computation()
     {
         return hand_for_computation;
     }
 
+    /**
+    * Set the hand for moving.
+    * @param entry can be "right" or "left".
+    * @return true/false on success/failure.
+    */
     /************************************************************************/
     bool set_hand_for_moving(const string &h)
     {
@@ -153,12 +188,21 @@ public:
             return false;
     }
 
+
+    /**
+    * Get the hand for pose computation.
+    * @return "right", "left" or "both".
+    */
     /************************************************************************/
     string get_hand_for_moving()
     {
         return hand_for_moving;
     }
 
+    /**
+    * Get if automatic selection of the hand is on or off
+    * @return "on" or "off".
+    */
     /************************************************************************/
     string get_automatic_hand()
     {
@@ -168,6 +212,11 @@ public:
             return "off";
     }
 
+    /**
+    * Set if automatic selection of the hand is on or off
+    *@param entry can be "on" or "off"
+    *@return true/false on success/failure.
+    */
     /************************************************************************/
     bool set_automatic_hand(const string &entry)
     {
@@ -180,6 +229,13 @@ public:
             return false;
     }
 
+    /**
+    * Ask to go to the next step, following the pipeline:
+    * 1- compute superquadric
+    * 2- compute pose
+    * 3- ask the robot to move
+    * @return true.
+    */
     /************************************************************************/
     bool go_next()
     {
@@ -188,6 +244,12 @@ public:
         return true;
     }
 
+    /**
+    * The pipeline is restarted and is
+    * waiting the command "go_next" to start
+    * from step 1.
+    * @return true.
+    */
     /************************************************************************/
     bool start_from_scratch()
     {
@@ -199,6 +261,10 @@ public:
         return true;
     }
 
+    /**
+    *If you want just to perform step 1.
+    * @return true.
+    */
     /************************************************************************/
     bool acquire_superq()
     {
@@ -208,6 +274,11 @@ public:
         return true;
     }
 
+    /**
+    *If you want just to perform step 2
+    * (if step 1 has been performed).
+    * @return true/false on success/failure.
+    */
     /************************************************************************/
     bool compute_pose()
     {
@@ -222,6 +293,11 @@ public:
             return false;
     }
 
+    /**
+    *If you want just to perform step 3
+    * (if step 2 has been performed).
+    * @return true/false on success/failure.
+    */
     /************************************************************************/
     bool grasp_object()
     {
@@ -239,6 +315,12 @@ public:
         }
     }
 
+    /**
+    *Ask the robot to stop and go back
+    * to home position with the arm
+    * that is moving.
+    * @return true/false on success/failure.
+    */
     /************************************************************************/
     bool go_back_home()
     {
@@ -251,6 +333,10 @@ public:
         return true;
     }
 
+    /**
+    *Clear all the computed poses
+    * @return true.
+    */
     /************************************************************************/
     bool clear_poses()
     {
@@ -262,6 +348,11 @@ public:
         return true;
     }
 
+    /**
+    * Set if to ask the filtered superquadric or not.
+    * @param entry can be "on" or "off".
+    * @return "on" or "off".
+    */
     /************************************************************************/
     bool set_filtered_superq(const string &entry)
     {
@@ -274,6 +365,10 @@ public:
             return false;          
     }
 
+    /**
+    * Get if to ask the filtered superquadric or not.
+    * @return true/false on success/failure.
+    */
     /************************************************************************/
     string get_filtered_superq()
     {
@@ -283,6 +378,11 @@ public:
             return "off";
     }
 
+    /**
+    * Set if to reset the filtered superquadric or not.
+    * @param entry can be "on" or "off".
+    * @return "on" or "off".
+    */
     /************************************************************************/
     bool set_reset_filter(const string &entry)
     {
@@ -295,6 +395,10 @@ public:
             return false;
     }
 
+    /**
+    * Get if to reset the filtered superquadric or not.
+    * @return true/false on success/failure.
+    */
     /************************************************************************/
     string get_reset_filter()
     {
@@ -304,6 +408,11 @@ public:
             return "off";
     }
 
+    /**
+    * Set the current object class
+    * @param entry the name of the object class
+    * @return true/false on success/failure.
+    */
     /************************************************************************/
     bool set_object_class(const string &entry)
     {
@@ -316,18 +425,30 @@ public:
         return (reply.get(0).asString()=="ok");
     }
 
+    /**
+    * Get the current object class
+    * @return the current object class.
+    */
     /************************************************************************/
     string get_object_class()
     {
         return object_class;
     }
 
+    /**
+    * Set the RFModule period
+    * @return the value of the period.
+    */
     /************************************************************************/
     bool getperiod()
     {
         return 0.0;
     }
 
+    /**
+    * Configure method of the RFModule
+    * @return true/false on success/failure.
+    */
     /**********************************************************************/
     bool configure(ResourceFinder &rf)
     {
@@ -377,6 +498,10 @@ public:
         return true;
     }
 
+    /**
+    * Close all the ports
+    * @return true.
+    */
     /**********************************************************************/
     bool close()
     {
@@ -396,6 +521,10 @@ public:
         return true;
     }
 
+    /**
+    * Execute the state machine and the communications with external modules
+    * @return true/false on success/failure.
+    */
     /**********************************************************************/
     bool updateModule()
     {
@@ -596,6 +725,9 @@ public:
         return true;
     }
 
+    /**
+    * Acquire 2D blob of the object.
+    */
     /***********************************************************************/
     void getBlob()
     {
@@ -632,6 +764,9 @@ public:
         }
     }
 
+    /**
+    * Get object 2D center from its name.
+    */
     /***********************************************************************/
     void pointFromName()
     {
@@ -744,6 +879,10 @@ public:
         }
     }
 
+    /**
+    * Get 3D points by querying SFM.
+    * @return a deque of Vectors with the point cloud
+    */
     /***********************************************************************/
     deque<Vector> get3Dpoints(ImageOf<PixelRgb>  *ImgIn)
     {
@@ -806,6 +945,10 @@ public:
         return p;
     }
 
+    /**
+    * Read the superquadric from the configuration file, in offline mode
+    * @return true.
+    */
     /****************************************************************/
     bool readSuperq(const string &name_obj, Vector &x, const int &dimension, ResourceFinder *rf)
     {
@@ -820,6 +963,10 @@ public:
         }
     }
 
+    /**
+    * Fill a property with the solutions inside
+    * @return a property with the computed solutions.
+    */
     /**********************************************************************/
     Property fillProperty(const Vector &sol)
     {
@@ -845,6 +992,9 @@ public:
         return superq;
     }
 
+    /**
+    * Process bottle with the superquadric.
+    */
     /**********************************************************************/
     void getBottle(Bottle &estimated_superq, Bottle &cmd)
     {
