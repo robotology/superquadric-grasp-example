@@ -1,0 +1,59 @@
+\section{experiment-\/1}
+\label{group__experiment-1}\index{experiment-\/1@{experiment-\/1}}
+
+
+An example on how to run the superquadric modeling and grasping demo.  
+
+
+An example on how to run the superquadric modeling and grasping demo. Version\-:1.\-0 \begin{DoxyAuthor}{Author}
+Giulia Vezzani \href{mailto:giulia.vezzani@iit.it}{\tt giulia.\-vezzani@iit.\-it} \par
+ 
+\end{DoxyAuthor}
+\begin{DoxyCopyright}{Copyright}
+Released under the terms of the G\-N\-U G\-P\-L v2.\-0 
+\end{DoxyCopyright}
+\hypertarget{group__experiment-1_intro_sec}{}\subsection{Description}\label{group__experiment-1_intro_sec}
+This module provides a wrapper code for performing the superquadric modeling and grasping demo. A tutorial on how to use the module is provided here\-: \href{https://github.com/robotology/superquadric-grasp-example/tree/gh-pages/experiment-1#how-to-run-the-code}{\tt {\bfseries tutorial}}.
+
+This page illustrates the main parameters of the module (Section {\bfseries Parameters}), the available ports and services.\hypertarget{group__experiment-1_parameters_sec}{}\subsection{Parameters}\label{group__experiment-1_parameters_sec}
+
+\begin{DoxyItemize}
+\item --from\-: Configuration file name.
+\item --objname\-: The name of the object to be modeled and grasped.
+\item --hand\-\_\-for\-\_\-computing\-: Select the hand for which we want to compute a grasping pose. Available values\-: right, left, both.
+\item --hand\-\_\-for\-\_\-computing\-: Select the hand for which we want to use for executing the grasping. Available values\-: right, left. 
+\end{DoxyItemize}\hypertarget{group__experiment-1_inputports_sec}{}\subsection{Input Ports}\label{group__experiment-1_inputports_sec}
+
+\begin{DoxyItemize}
+\item /experiment-\/1/img\-:i \mbox{[}yarp\-::sig\-::\-Image\-Of\-Pixel\-Rgb\mbox{]} \mbox{[}default carrier\-:tcp\mbox{]}\-: Receive the image from the left camera for saving the colored point cloud.
+\end{DoxyItemize}\hypertarget{group__experiment-1_outputports_sec}{}\subsection{Output Ports}\label{group__experiment-1_outputports_sec}
+\hypertarget{group__experiment-1_services_sec}{}\subsection{Services}\label{group__experiment-1_services_sec}
+
+\begin{DoxyItemize}
+\item /experiment-\/1/rpc \mbox{[}rpc-\/server\mbox{]}\-: service port . This service is described in \hyperlink{classexperimentOne__IDL}{experiment\-One\-\_\-\-I\-D\-L} (idl.\-thrift)
+\item /experiment-\/1/blob\-:rpc \mbox{[}rpc-\/client\mbox{]}\-:
+
+Ask for the 2\-D blob of the object.
+
+. This service is described in yarp\-::os\-::\-Bottle ()
+\item /experiment-\/1/\-O\-P\-C\-:rpc \mbox{[}rpc-\/client\mbox{]}\-:
+
+Ask for the 2\-D bounding box of the object.
+
+. This service is described in yarp\-::os\-::\-Bottle ()
+\item /experiment-\/1/\-S\-F\-M\-:rpc \mbox{[}rpc-\/client\mbox{]}\-:
+
+Ask for the 3\-D point cloud of the object.
+
+. This service is described in yarp\-::os\-::\-Bottle ()
+\item /experiment-\/1/superq\-:rpc \mbox{[}rpc-\/client\mbox{]}\-:
+
+Interact with the superquadric-\/model module.
+
+. This service is described in yarp\-::os\-::\-Bottle ()
+\item /experiment-\/1/grasp\-:rpc \mbox{[}rpc-\/client\mbox{]}\-:
+
+Interact with the superquadric-\/grasp module.
+
+. This service is described in yarp\-::os\-::\-Bottle () 
+\end{DoxyItemize}

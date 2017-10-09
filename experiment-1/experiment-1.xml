@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="yarpmanifest.xsl"?>
+
+<module>
+  <name>experiment-1</name>
+  <doxygen-group></doxygen-group>
+  <description>An example on how to run the superquadric modeling and grasping demo.</description>
+  <copypolicy>Released under the terms of the GNU GPL v2.0</copypolicy>
+  <version>1.0</version>
+
+<description-long>
+This module provides a wrapper code for performing the superquadric modeling and grasping demo.
+A tutorial on how to use the module is provided here: <a href="https://github.com/robotology/superquadric-grasp-example/tree/gh-pages/experiment-1#how-to-run-the-code"><b>tutorial</b></a>.
+
+This page illustrates the main parameters of the module (Section <b>Parameters</b>), the available ports and services.
+
+</description-long>
+
+  <arguments>
+    <param default="config.ini" desc="Configuration file name.">from</param>
+    <param default="object" desc="The name of the object to be modeled and grasped.">objname</param>
+    <param default="both" desc="Select the hand for which we want to compute a grasping pose. Available values: right, left, both.">hand_for_computing</param>
+    <param default="right" desc="Select the hand for which we want to use for executing the grasping. Available values: right, left.">hand_for_computing</param>
+  </arguments>
+
+  <authors>
+    <author email="giulia.vezzani@iit.it"> Giulia Vezzani </author>
+  </authors>
+
+  <data>
+  <input>
+      <type>yarp::sig::ImageOfPixelRgb</type>
+      <port carrier="tcp">/experiment-1/img:i</port>
+      <description>
+        Receive the image from the left camera for saving the colored point cloud.
+      </description>
+  </input>
+  </data>
+
+  <services>
+ <client>
+      <type>yarp::os::Bottle</type>
+      <port carrier="tcp">/experiment-1/blob:rpc</port>
+      <description>
+        Ask for the 2D blob of the object.
+      </description>
+  </client>
+
+    <client>
+      <type>yarp::os::Bottle</type>
+      <port carrier="tcp">/experiment-1/OPC:rpc</port>
+      <description>
+        Ask for the 2D bounding box of the object.
+      </description>
+    </client>
+
+    <client>
+      <type>yarp::os::Bottle</type>
+      <port carrier="tcp">/experiment-1/SFM:rpc</port>
+      <description>
+        Ask for the 3D point cloud of the object.
+      </description>
+    </client>
+
+    <client>
+      <type>yarp::os::Bottle</type>
+      <port carrier="tcp">/experiment-1/superq:rpc</port>
+      <description>
+        Interact with the superquadric-model module.
+      </description>
+    </client>
+
+    <client>
+      <type>yarp::os::Bottle</type>
+      <port carrier="tcp">/experiment-1/grasp:rpc</port>
+      <description>
+        Interact with the superquadric-grasp module.
+      </description>
+    </client>
+
+    <server>
+      <type>experimentOne_IDL</type>
+      <idl>idl.thrift</idl>
+      <port>/experiment-1/rpc</port>
+      <description>service port</description>
+    </server>
+  </services>
+
+</module>

@@ -1,0 +1,484 @@
+\section{experiment\-One\-\_\-\-I\-D\-L Class Reference}
+\label{classexperimentOne__IDL}\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}}
+
+
+\hyperlink{classexperimentOne__IDL}{experiment\-One\-\_\-\-I\-D\-L} I\-D\-L Interface to \hyperlink{group__experiment-1}{experiment-\/1} services.  
+
+
+
+
+{\ttfamily \#include $<$experiment\-One\-\_\-\-I\-D\-L.\-h$>$}
+
+Inheritance diagram for experiment\-One\-\_\-\-I\-D\-L\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classexperimentOne__IDL}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual yarp\-::os\-::\-Bottle \hyperlink{classexperimentOne__IDL_a4e631c4039aa9e4685f7d75f778145a2}{get\-\_\-blob} ()
+\begin{DoxyCompactList}\small\item\em Send the current 2\-D blob. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classexperimentOne__IDL_a3ba4eae42268c1dec8c90a971ffde7af}{set\-\_\-object\-\_\-name} (const std\-::string \&entry)
+\begin{DoxyCompactList}\small\item\em Set the name of the object (stored by the object property collector). \end{DoxyCompactList}\item 
+virtual std\-::string \hyperlink{classexperimentOne__IDL_af9d945019f95b6f806a20615e56b7c4b}{get\-\_\-object\-\_\-name} ()
+\begin{DoxyCompactList}\small\item\em Get the name of the object. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classexperimentOne__IDL_ab628b9a3d8ada84e07aaadf891a7ccd0}{go\-\_\-next} ()
+\begin{DoxyCompactList}\small\item\em Ask to go to the next step, following the pipeline\-: 1-\/ compute superquadric 2-\/ compute pose 3-\/ ask the robot to move. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classexperimentOne__IDL_a3d5c2f8f904ef29753934d10df4717a4}{start\-\_\-from\-\_\-scratch} ()
+\begin{DoxyCompactList}\small\item\em The pipeline is restarted and is waiting the command \char`\"{}go\-\_\-next\char`\"{} to start from step 1. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classexperimentOne__IDL_a30aa180a17e099d11a6c0588dc96eed1}{acquire\-\_\-superq} ()
+\begin{DoxyCompactList}\small\item\em If you want just to perform step 1. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classexperimentOne__IDL_a60389d324212814aa2dce49ed321e184}{compute\-\_\-pose} ()
+\begin{DoxyCompactList}\small\item\em If you want just to perform step 2 (if step 1 has been performed). \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classexperimentOne__IDL_a2c72862f31d34a4e12adeb1e1289b5f0}{grasp\-\_\-object} ()
+\begin{DoxyCompactList}\small\item\em If you want just to perform step 3 (if step 2 has been performed). \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classexperimentOne__IDL_a22c8d88117619d4e32ccc46efb455839}{go\-\_\-back\-\_\-home} ()
+\begin{DoxyCompactList}\small\item\em Ask the robot to stop and go back to home position with the arm that is moving. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classexperimentOne__IDL_a271373576b352956b3d7b2c111db3e40}{clear\-\_\-poses} ()
+\begin{DoxyCompactList}\small\item\em Clear all the computed poses. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classexperimentOne__IDL_acb2bfe937ed1900166744fce3a8f4cab}{set\-\_\-hand\-\_\-for\-\_\-computation} (const std\-::string \&entry)
+\begin{DoxyCompactList}\small\item\em Set the hand for pose computation. \end{DoxyCompactList}\item 
+virtual std\-::string \hyperlink{classexperimentOne__IDL_a93141c9f92c9c7a17518c3ddafda1fa4}{get\-\_\-hand\-\_\-for\-\_\-computation} ()
+\begin{DoxyCompactList}\small\item\em Get the hand for pose computation. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classexperimentOne__IDL_a0422e6ffaef0e60e1a557a342aeb5d4a}{set\-\_\-hand\-\_\-for\-\_\-moving} (const std\-::string \&entry)
+\begin{DoxyCompactList}\small\item\em Set the hand for moving. \end{DoxyCompactList}\item 
+virtual std\-::string \hyperlink{classexperimentOne__IDL_a9b24bdfe4b5bff2970a63126ca100706}{get\-\_\-hand\-\_\-for\-\_\-moving} ()
+\begin{DoxyCompactList}\small\item\em Get the hand for pose computation. \end{DoxyCompactList}\item 
+virtual std\-::string \hyperlink{classexperimentOne__IDL_a5cfa4d56fb13586ba889ff11031e88d1}{get\-\_\-automatic\-\_\-hand} ()
+\begin{DoxyCompactList}\small\item\em Get if automatic selection of the hand is on or off. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classexperimentOne__IDL_a1612f36ed85af9e6dbc595405e733977}{set\-\_\-automatic\-\_\-hand} (const std\-::string \&entry)
+\begin{DoxyCompactList}\small\item\em Set if automatic selection of the hand is on or off. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classexperimentOne__IDL_a36a7306993eeae5778bacac4f4154126}{set\-\_\-filtered\-\_\-superq} (const std\-::string \&entry)
+\begin{DoxyCompactList}\small\item\em Set if to ask the filtered superquadric or not. \end{DoxyCompactList}\item 
+virtual std\-::string \hyperlink{classexperimentOne__IDL_a855625d91d880d87206c643a831c3453}{get\-\_\-filtered\-\_\-superq} ()
+\begin{DoxyCompactList}\small\item\em Get if to ask the filtered superquadric or not. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classexperimentOne__IDL_a0e42d009f1d2bfbaae9906c4775dd922}{set\-\_\-reset\-\_\-filter} (const std\-::string \&entry)
+\begin{DoxyCompactList}\small\item\em Set if to reset the filtered superquadric or not. \end{DoxyCompactList}\item 
+virtual std\-::string \hyperlink{classexperimentOne__IDL_aefa9eabe3c0b14707eb2d8e24f3e0312}{get\-\_\-reset\-\_\-filter} ()
+\begin{DoxyCompactList}\small\item\em Get if to reset the filtered superquadric or not. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classexperimentOne__IDL_a12be87d589038ab4ee9bc1adb902ac53}{set\-\_\-object\-\_\-class} (const std\-::string \&entry)
+\begin{DoxyCompactList}\small\item\em Set the current object class. \end{DoxyCompactList}\item 
+virtual std\-::string \hyperlink{classexperimentOne__IDL_acecb65b51331f47d97fb4a3a6cf15b42}{get\-\_\-object\-\_\-class} ()
+\begin{DoxyCompactList}\small\item\em Get the current object class. \end{DoxyCompactList}\item 
+virtual bool {\bfseries read} (yarp\-::os\-::\-Connection\-Reader \&connection) Y\-A\-R\-P\-\_\-\-O\-V\-E\-R\-R\-I\-D\-E\label{classexperimentOne__IDL_a3e02eb2decd566b824035195358abe0d}
+
+\item 
+virtual std\-::vector$<$ std\-::string $>$ {\bfseries help} (const std\-::string \&function\-Name=\char`\"{}-\/-\/all\char`\"{})\label{classexperimentOne__IDL_a758e17bcfb1b243915cd696eccd1ce5b}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classexperimentOne__IDL}{experiment\-One\-\_\-\-I\-D\-L} I\-D\-L Interface to \hyperlink{group__experiment-1}{experiment-\/1} services. 
+
+Definition at line 18 of file experiment\-One\-\_\-\-I\-D\-L.\-h.
+
+
+
+\subsection{Member Function Documentation}
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!acquire\-\_\-superq@{acquire\-\_\-superq}}
+\index{acquire\-\_\-superq@{acquire\-\_\-superq}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{acquire\-\_\-superq}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool experiment\-One\-\_\-\-I\-D\-L\-::acquire\-\_\-superq (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a30aa180a17e099d11a6c0588dc96eed1}
+
+
+If you want just to perform step 1. 
+
+\begin{DoxyReturn}{Returns}
+true. 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classExperimentOne_a28e92b0a8df58c9dfc77ddae39c642b5}{Experiment\-One}.
+
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!clear\-\_\-poses@{clear\-\_\-poses}}
+\index{clear\-\_\-poses@{clear\-\_\-poses}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{clear\-\_\-poses}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool experiment\-One\-\_\-\-I\-D\-L\-::clear\-\_\-poses (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a271373576b352956b3d7b2c111db3e40}
+
+
+Clear all the computed poses. 
+
+\begin{DoxyReturn}{Returns}
+true. 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classExperimentOne_a827996b603991113f08c928ccd7e7793}{Experiment\-One}.
+
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!compute\-\_\-pose@{compute\-\_\-pose}}
+\index{compute\-\_\-pose@{compute\-\_\-pose}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{compute\-\_\-pose}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool experiment\-One\-\_\-\-I\-D\-L\-::compute\-\_\-pose (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a60389d324212814aa2dce49ed321e184}
+
+
+If you want just to perform step 2 (if step 1 has been performed). 
+
+\begin{DoxyReturn}{Returns}
+true/false on success/failure. 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classExperimentOne_a39a4ec1aa004bcdc7a2b3cfb3804e59f}{Experiment\-One}.
+
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!get\-\_\-automatic\-\_\-hand@{get\-\_\-automatic\-\_\-hand}}
+\index{get\-\_\-automatic\-\_\-hand@{get\-\_\-automatic\-\_\-hand}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{get\-\_\-automatic\-\_\-hand}]{\setlength{\rightskip}{0pt plus 5cm}virtual std\-::string experiment\-One\-\_\-\-I\-D\-L\-::get\-\_\-automatic\-\_\-hand (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a5cfa4d56fb13586ba889ff11031e88d1}
+
+
+Get if automatic selection of the hand is on or off. 
+
+\begin{DoxyReturn}{Returns}
+\char`\"{}on\char`\"{} or \char`\"{}off\char`\"{}. 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classExperimentOne_a25eb29db579ef1d960c35bd2bc71ec36}{Experiment\-One}.
+
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!get\-\_\-blob@{get\-\_\-blob}}
+\index{get\-\_\-blob@{get\-\_\-blob}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{get\-\_\-blob}]{\setlength{\rightskip}{0pt plus 5cm}virtual yarp\-::os\-::\-Bottle experiment\-One\-\_\-\-I\-D\-L\-::get\-\_\-blob (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a4e631c4039aa9e4685f7d75f778145a2}
+
+
+Send the current 2\-D blob. 
+
+\begin{DoxyReturn}{Returns}
+a bottle containing all the 2\-D points of the blob 
+\end{DoxyReturn}
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!get\-\_\-filtered\-\_\-superq@{get\-\_\-filtered\-\_\-superq}}
+\index{get\-\_\-filtered\-\_\-superq@{get\-\_\-filtered\-\_\-superq}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{get\-\_\-filtered\-\_\-superq}]{\setlength{\rightskip}{0pt plus 5cm}virtual std\-::string experiment\-One\-\_\-\-I\-D\-L\-::get\-\_\-filtered\-\_\-superq (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a855625d91d880d87206c643a831c3453}
+
+
+Get if to ask the filtered superquadric or not. 
+
+\begin{DoxyReturn}{Returns}
+true/false on success/failure. 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classExperimentOne_a4fcbf7d582b26a64f67fc7d05f578e41}{Experiment\-One}.
+
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!get\-\_\-hand\-\_\-for\-\_\-computation@{get\-\_\-hand\-\_\-for\-\_\-computation}}
+\index{get\-\_\-hand\-\_\-for\-\_\-computation@{get\-\_\-hand\-\_\-for\-\_\-computation}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{get\-\_\-hand\-\_\-for\-\_\-computation}]{\setlength{\rightskip}{0pt plus 5cm}virtual std\-::string experiment\-One\-\_\-\-I\-D\-L\-::get\-\_\-hand\-\_\-for\-\_\-computation (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a93141c9f92c9c7a17518c3ddafda1fa4}
+
+
+Get the hand for pose computation. 
+
+\begin{DoxyReturn}{Returns}
+\char`\"{}right\char`\"{}, \char`\"{}left\char`\"{} or \char`\"{}both\char`\"{}. 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classExperimentOne_aef03af801993c3d869f0eedde21388dd}{Experiment\-One}.
+
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!get\-\_\-hand\-\_\-for\-\_\-moving@{get\-\_\-hand\-\_\-for\-\_\-moving}}
+\index{get\-\_\-hand\-\_\-for\-\_\-moving@{get\-\_\-hand\-\_\-for\-\_\-moving}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{get\-\_\-hand\-\_\-for\-\_\-moving}]{\setlength{\rightskip}{0pt plus 5cm}virtual std\-::string experiment\-One\-\_\-\-I\-D\-L\-::get\-\_\-hand\-\_\-for\-\_\-moving (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a9b24bdfe4b5bff2970a63126ca100706}
+
+
+Get the hand for pose computation. 
+
+\begin{DoxyReturn}{Returns}
+\char`\"{}right\char`\"{}, \char`\"{}left\char`\"{} or \char`\"{}both\char`\"{}. 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classExperimentOne_a066ac71cee6dec9422f213b2a58f21ba}{Experiment\-One}.
+
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!get\-\_\-object\-\_\-class@{get\-\_\-object\-\_\-class}}
+\index{get\-\_\-object\-\_\-class@{get\-\_\-object\-\_\-class}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{get\-\_\-object\-\_\-class}]{\setlength{\rightskip}{0pt plus 5cm}virtual std\-::string experiment\-One\-\_\-\-I\-D\-L\-::get\-\_\-object\-\_\-class (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_acecb65b51331f47d97fb4a3a6cf15b42}
+
+
+Get the current object class. 
+
+\begin{DoxyReturn}{Returns}
+the current object class. 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classExperimentOne_a43cf934e2479fd6ef87be9048800a489}{Experiment\-One}.
+
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!get\-\_\-object\-\_\-name@{get\-\_\-object\-\_\-name}}
+\index{get\-\_\-object\-\_\-name@{get\-\_\-object\-\_\-name}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{get\-\_\-object\-\_\-name}]{\setlength{\rightskip}{0pt plus 5cm}virtual std\-::string experiment\-One\-\_\-\-I\-D\-L\-::get\-\_\-object\-\_\-name (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_af9d945019f95b6f806a20615e56b7c4b}
+
+
+Get the name of the object. 
+
+\begin{DoxyReturn}{Returns}
+a string with the name of the object. 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classExperimentOne_ac087378ef3308b52cef17a2fc9d80dfe}{Experiment\-One}.
+
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!get\-\_\-reset\-\_\-filter@{get\-\_\-reset\-\_\-filter}}
+\index{get\-\_\-reset\-\_\-filter@{get\-\_\-reset\-\_\-filter}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{get\-\_\-reset\-\_\-filter}]{\setlength{\rightskip}{0pt plus 5cm}virtual std\-::string experiment\-One\-\_\-\-I\-D\-L\-::get\-\_\-reset\-\_\-filter (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_aefa9eabe3c0b14707eb2d8e24f3e0312}
+
+
+Get if to reset the filtered superquadric or not. 
+
+\begin{DoxyReturn}{Returns}
+true/false on success/failure. 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classExperimentOne_a3573bd59ace3a48477beefb75d544326}{Experiment\-One}.
+
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!go\-\_\-back\-\_\-home@{go\-\_\-back\-\_\-home}}
+\index{go\-\_\-back\-\_\-home@{go\-\_\-back\-\_\-home}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{go\-\_\-back\-\_\-home}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool experiment\-One\-\_\-\-I\-D\-L\-::go\-\_\-back\-\_\-home (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a22c8d88117619d4e32ccc46efb455839}
+
+
+Ask the robot to stop and go back to home position with the arm that is moving. 
+
+\begin{DoxyReturn}{Returns}
+true/false on success/failure. 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classExperimentOne_a967da7276e9bee19c45c8a000bf1cb01}{Experiment\-One}.
+
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!go\-\_\-next@{go\-\_\-next}}
+\index{go\-\_\-next@{go\-\_\-next}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{go\-\_\-next}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool experiment\-One\-\_\-\-I\-D\-L\-::go\-\_\-next (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_ab628b9a3d8ada84e07aaadf891a7ccd0}
+
+
+Ask to go to the next step, following the pipeline\-: 1-\/ compute superquadric 2-\/ compute pose 3-\/ ask the robot to move. 
+
+\begin{DoxyReturn}{Returns}
+true. 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classExperimentOne_a6ce79bc38d0e6fc201db5576a2c9e265}{Experiment\-One}.
+
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!grasp\-\_\-object@{grasp\-\_\-object}}
+\index{grasp\-\_\-object@{grasp\-\_\-object}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{grasp\-\_\-object}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool experiment\-One\-\_\-\-I\-D\-L\-::grasp\-\_\-object (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a2c72862f31d34a4e12adeb1e1289b5f0}
+
+
+If you want just to perform step 3 (if step 2 has been performed). 
+
+\begin{DoxyReturn}{Returns}
+true/false on success/failure. 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classExperimentOne_a9a2ab97ed5ae9420e352a20b01feda90}{Experiment\-One}.
+
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!set\-\_\-automatic\-\_\-hand@{set\-\_\-automatic\-\_\-hand}}
+\index{set\-\_\-automatic\-\_\-hand@{set\-\_\-automatic\-\_\-hand}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{set\-\_\-automatic\-\_\-hand}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool experiment\-One\-\_\-\-I\-D\-L\-::set\-\_\-automatic\-\_\-hand (
+\begin{DoxyParamCaption}
+\item[{const std\-::string \&}]{entry}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a1612f36ed85af9e6dbc595405e733977}
+
+
+Set if automatic selection of the hand is on or off. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entry} & can be \char`\"{}on\char`\"{} or \char`\"{}off\char`\"{} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true/false on success/failure. 
+\end{DoxyReturn}
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!set\-\_\-filtered\-\_\-superq@{set\-\_\-filtered\-\_\-superq}}
+\index{set\-\_\-filtered\-\_\-superq@{set\-\_\-filtered\-\_\-superq}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{set\-\_\-filtered\-\_\-superq}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool experiment\-One\-\_\-\-I\-D\-L\-::set\-\_\-filtered\-\_\-superq (
+\begin{DoxyParamCaption}
+\item[{const std\-::string \&}]{entry}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a36a7306993eeae5778bacac4f4154126}
+
+
+Set if to ask the filtered superquadric or not. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entry} & can be \char`\"{}on\char`\"{} or \char`\"{}off\char`\"{}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}on\char`\"{} or \char`\"{}off\char`\"{}. 
+\end{DoxyReturn}
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!set\-\_\-hand\-\_\-for\-\_\-computation@{set\-\_\-hand\-\_\-for\-\_\-computation}}
+\index{set\-\_\-hand\-\_\-for\-\_\-computation@{set\-\_\-hand\-\_\-for\-\_\-computation}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{set\-\_\-hand\-\_\-for\-\_\-computation}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool experiment\-One\-\_\-\-I\-D\-L\-::set\-\_\-hand\-\_\-for\-\_\-computation (
+\begin{DoxyParamCaption}
+\item[{const std\-::string \&}]{entry}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_acb2bfe937ed1900166744fce3a8f4cab}
+
+
+Set the hand for pose computation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entry} & can be \char`\"{}right\char`\"{}, \char`\"{}left\char`\"{} or \char`\"{}both\char`\"{}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true/false on success/failure. 
+\end{DoxyReturn}
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!set\-\_\-hand\-\_\-for\-\_\-moving@{set\-\_\-hand\-\_\-for\-\_\-moving}}
+\index{set\-\_\-hand\-\_\-for\-\_\-moving@{set\-\_\-hand\-\_\-for\-\_\-moving}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{set\-\_\-hand\-\_\-for\-\_\-moving}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool experiment\-One\-\_\-\-I\-D\-L\-::set\-\_\-hand\-\_\-for\-\_\-moving (
+\begin{DoxyParamCaption}
+\item[{const std\-::string \&}]{entry}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a0422e6ffaef0e60e1a557a342aeb5d4a}
+
+
+Set the hand for moving. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entry} & can be \char`\"{}right\char`\"{} or \char`\"{}left\char`\"{}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true/false on success/failure. 
+\end{DoxyReturn}
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!set\-\_\-object\-\_\-class@{set\-\_\-object\-\_\-class}}
+\index{set\-\_\-object\-\_\-class@{set\-\_\-object\-\_\-class}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{set\-\_\-object\-\_\-class}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool experiment\-One\-\_\-\-I\-D\-L\-::set\-\_\-object\-\_\-class (
+\begin{DoxyParamCaption}
+\item[{const std\-::string \&}]{entry}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a12be87d589038ab4ee9bc1adb902ac53}
+
+
+Set the current object class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entry} & the name of the object class \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true/false on success/failure. 
+\end{DoxyReturn}
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!set\-\_\-object\-\_\-name@{set\-\_\-object\-\_\-name}}
+\index{set\-\_\-object\-\_\-name@{set\-\_\-object\-\_\-name}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{set\-\_\-object\-\_\-name}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool experiment\-One\-\_\-\-I\-D\-L\-::set\-\_\-object\-\_\-name (
+\begin{DoxyParamCaption}
+\item[{const std\-::string \&}]{entry}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a3ba4eae42268c1dec8c90a971ffde7af}
+
+
+Set the name of the object (stored by the object property collector). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entry} & is the name of the object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true/false on success/failure. 
+\end{DoxyReturn}
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!set\-\_\-reset\-\_\-filter@{set\-\_\-reset\-\_\-filter}}
+\index{set\-\_\-reset\-\_\-filter@{set\-\_\-reset\-\_\-filter}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{set\-\_\-reset\-\_\-filter}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool experiment\-One\-\_\-\-I\-D\-L\-::set\-\_\-reset\-\_\-filter (
+\begin{DoxyParamCaption}
+\item[{const std\-::string \&}]{entry}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a0e42d009f1d2bfbaae9906c4775dd922}
+
+
+Set if to reset the filtered superquadric or not. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entry} & can be \char`\"{}on\char`\"{} or \char`\"{}off\char`\"{}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\char`\"{}on\char`\"{} or \char`\"{}off\char`\"{}. 
+\end{DoxyReturn}
+\index{experiment\-One\-\_\-\-I\-D\-L@{experiment\-One\-\_\-\-I\-D\-L}!start\-\_\-from\-\_\-scratch@{start\-\_\-from\-\_\-scratch}}
+\index{start\-\_\-from\-\_\-scratch@{start\-\_\-from\-\_\-scratch}!experimentOne_IDL@{experiment\-One\-\_\-\-I\-D\-L}}
+\subsubsection[{start\-\_\-from\-\_\-scratch}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool experiment\-One\-\_\-\-I\-D\-L\-::start\-\_\-from\-\_\-scratch (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classexperimentOne__IDL_a3d5c2f8f904ef29753934d10df4717a4}
+
+
+The pipeline is restarted and is waiting the command \char`\"{}go\-\_\-next\char`\"{} to start from step 1. 
+
+\begin{DoxyReturn}{Returns}
+true. 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classExperimentOne_ac01beb32e67fd6067c273ae505060139}{Experiment\-One}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/gvezzani/\-Desktop/\-Ph\-D/\-Anno\-\_\-2/experiment-\/new-\/grasp/experiment-\/1/idl\-\_\-dox/experiment\-One\-\_\-\-I\-D\-L.\-h\end{DoxyCompactItemize}
