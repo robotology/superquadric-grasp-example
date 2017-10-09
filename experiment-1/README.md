@@ -51,3 +51,5 @@ The command:
 - `grasp_object` executes step 6.
 
 
+## Documentation
+The online documentation of this module is available [here]().
