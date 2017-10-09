@@ -113,7 +113,7 @@ service experimentOne_IDL
     * @param entry can be "right" or "left".
     * @return true/false on success/failure.
     */
-    bool set_hand_for_moving(1: string h);
+    bool set_hand_for_moving(1: string entry);
 
     /**
     * Get the hand for pose computation.
