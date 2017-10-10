@@ -6,7 +6,7 @@ Collect experiments on the superquadric grasping demo
 - [Use case & documentation](#use-case)
 
 ## experiment-1
-The module `experiment-1` implements a wrapper code for performing the superquadric modeling and grasping pipeline described in [1].
+The module `experiment-1` implements a wrapper code for performing the superquadric modeling and grasping pipeline described in [[1]](#references).
 This wrapper code communicates with existing modules developed in [`robotology repo`](https://github.com/robotology) and its structure can be summarized as follow:
 
 
@@ -30,4 +30,5 @@ The online documentation of this module is available [here](http://robotology.gi
 
 [`Go to the top`](#superquadric-graps-example)
 
+# References
 [1] G. Vezzani, U. Pattacini and L. Natale, "A grasping approach based on superquadric models", IEEE-RAS International Conference on Robotics and Automation 2017, pp 1579-1586.
