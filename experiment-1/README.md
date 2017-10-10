@@ -7,7 +7,7 @@
 
 In Linux systems, the code can be compiled as follows:
 
-```
+```sh
 git clone https://github.com/robotology-playground/experiment-new-grasp.git
 cd superquadric-grasp
 mkdir build; cd build
@@ -30,7 +30,7 @@ The yarpviewers show respectively the estimated superquadric and the computed gr
 7. Interact with the `experiment-1` code.
 
 Here is an example on how to interact with the wrapper code:
-```
+```sh
 yarp rpc /experiment-1/rpc
 >> set_object_name <object_name>
 [ok]
