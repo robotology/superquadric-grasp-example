@@ -21,7 +21,7 @@ This wrapper code communicates with existing modules developed in [`robotology r
 5) The wrapper code sends the estimated superquadric to the [superquadric-grasp module](https://github.com/robotology/superquadric-grasp), which computes suitable poses.
 6) Finally, the superquadric-grasp is asked to perform the grasping task.
 
-[`Go to the top`(#superquadric-graps-example)
+[`Go to the top`](#superquadric-graps-example)
 ## Use case
 Information about how to compile,  launch and interact with the module is provided in the [`experiment-1 folder`](https://github.com/robotology-playground/experiment-new-grasp/tree/master/experiment-1).
 
