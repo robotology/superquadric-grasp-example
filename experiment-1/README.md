@@ -1,4 +1,7 @@
 # experiment-1
+#### Overview
+- [How to compile](#how-to-compile)
+- [How to run the code](#how-to-run-the-code)
 
 ## How to compile
 
@@ -11,7 +14,7 @@ mkdir build; cd build
 ccmake ..
 make install
 ```
-
+[`Go to the top`](#experiment-1)
 ## How to run the code
 This code can be launched both on the iCub robot and simulator. However, a complete testing can be executed only on the robot, 
 since it communicates with several modules that are quite hard to be launched on the simulator.
@@ -50,5 +53,5 @@ The command:
 - `compute_pose` executes step 5.
 - `grasp_object` executes step 6.
 
-
+[`Go to the top`](#experiment-1)
 
