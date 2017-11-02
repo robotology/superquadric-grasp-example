@@ -8,8 +8,8 @@
 In Linux systems, the code can be compiled as follows:
 
 ```sh
-git clone https://github.com/robotology-playground/experiment-new-grasp.git
-cd superquadric-grasp
+git clone https://github.com/robotology-playground/superquadric-grasp-example.git
+cd experiment-1
 mkdir build; cd build
 ccmake ..
 make install
