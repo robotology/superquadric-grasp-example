@@ -563,28 +563,49 @@ public:
         {
             ImgIn=portImgIn.read(false);
 
-            if (blob_points.size()>1)
-            {
-                points=get3Dpoints(ImgIn);           
-            }
+            //if (blob_points.size()>1)
+            //{
+            //    points=get3Dpoints(ImgIn);           
+            //}
 
             if (!filtered || object_class=="default")
             {
-                Bottle cmd;
-                cmd.addString("get_superq");
+                Bottle cmd, reply;                
+                cmd.clear();
+                reply.clear();
 
-                Bottle &in1=cmd.addList();
+                cmd.addString("send_point_clouds");
 
-                for (size_t i=0; i<points.size(); i++)
+                deque<Vector> pc;
+
+                Bottle &in0=cmd.addList();
+
+                pc.clear();
+
+
+                if (blob_points.size()>1)
                 {
-                    Bottle &in=in1.addList();
-                    in.addDouble(points[i][0]);
-                    in.addDouble(points[i][1]);
-                    in.addDouble(points[i][2]);
-                    in.addDouble(points[i][3]);
-                    in.addDouble(points[i][4]);
-                    in.addDouble(points[i][5]);
+                    pc=get3Dpoints(ImgIn);
                 }
+
+yDebug()<<"pc size"<<pc.size();
+
+                for (size_t i=0; i<pc.size(); i++)
+                {
+                    Bottle &in=in0.addList();
+                    in.addDouble(pc[i][0]);
+                    in.addDouble(pc[i][1]);
+                    in.addDouble(pc[i][2]);                        
+                }
+
+                superqRpc.write(cmd, reply);
+
+                cmd.clear();
+                reply.clear();
+
+                 Time::delay(5.0);
+
+                cmd.addString("get_superq");
 
                 go_on=false;
 
@@ -654,7 +675,7 @@ public:
         if ((go_on==true) && (superq_received==true) && (pose_received==false))
         {
             Bottle cmd, reply;
-            cmd.addString("get_grasping_pose");         
+            cmd.addString("get_grasping_pose_multiple");         
 
             if (object_class!="default")
             {
@@ -938,7 +959,7 @@ public:
                 }
             }
 
-            if (points.size()<=0)
+            if (p.size()<=0)
             {
                 yError("[SuperqComputation]: Some problems in point acquisition!");
             }
@@ -1070,42 +1091,49 @@ public:
         deque<Vector> superq_auxs;
 
         Vector sup(11,0.0);
+        
+        int size=all->size();
 
-        for (size_t i=0; i<all->size(); i++)
+        size=all->size()/4;
+
+        for (size_t i=1; i<=size; i++)
         {
             stringstream ss;
-            ss<<i/4;
+            ss<<i;
             string i_str=ss.str();
 
-            Bottle *group=all->get(i).asList();
-            if (group->get(0).asString() == "dimensions_"+i_str)
-            {
-                Bottle *dim=group->get(1).asList();
+            for (size_t i=0; i<all->size(); i++)
+            {         
+                Bottle *group=all->get(i).asList();
+                if (group->get(0).asString() == "dimensions_"+i_str)
+                {
+                    Bottle *dim=group->get(1).asList();
 
-                sup[0]=dim->get(0).asDouble(); sup[1]=dim->get(1).asDouble(); sup[2]=dim->get(2).asDouble();
-            }
-            if (group->get(0).asString() == "exponents_"+i_str)
-            {
-                Bottle *dim=group->get(1).asList();
+                    sup[0]=dim->get(0).asDouble(); sup[1]=dim->get(1).asDouble(); sup[2]=dim->get(2).asDouble();
+                }
+                if (group->get(0).asString() == "exponent_"+i_str)
+                {
+                    Bottle *dim=group->get(1).asList();
 
-                sup[3]=dim->get(0).asDouble(); sup[4]=dim->get(1).asDouble();
-            }
-            if (group->get(0).asString() == "center_"+i_str)
-            {
-                Bottle *dim=group->get(1).asList();
+                    sup[3]=dim->get(0).asDouble(); sup[4]=dim->get(1).asDouble();
+                }
+                if (group->get(0).asString() == "center_"+i_str)
+                {
+                    Bottle *dim=group->get(1).asList();
 
-                sup[5]=dim->get(0).asDouble(); sup[6]=dim->get(1).asDouble(); sup[7]=dim->get(2).asDouble();
-            }
-            if (group->get(0).asString() == "orientation_"+i_str)
-            {
-                Bottle *dim=group->get(1).asList();
+                    sup[5]=dim->get(0).asDouble(); sup[6]=dim->get(1).asDouble(); sup[7]=dim->get(2).asDouble();
+                }
+                if (group->get(0).asString() == "orientation_"+i_str)
+                {
+                    Bottle *dim=group->get(1).asList();
 
-                sup[8]=dim->get(0).asDouble(); sup[9]=dim->get(1).asDouble(); sup[10]=dim->get(2).asDouble(); sup[11]=dim->get(3).asDouble();
+                    sup[8]=dim->get(0).asDouble(); sup[9]=dim->get(1).asDouble(); sup[10]=dim->get(2).asDouble(); sup[11]=dim->get(3).asDouble();
+                }                
             }
 
             superq_auxs.push_back(sup);
         }
-
+ 
         Bottle &b1=cmd.addList();
         Bottle &b2=b1.addList();
         b2.addString("dimensions");
@@ -1127,16 +1155,19 @@ public:
         Bottle &b5l=b5.addList();
         b5l.addDouble(superq_auxs[0][8]); b5l.addDouble(superq_auxs[0][9]); b5l.addDouble(superq_auxs[0][10]); b5l.addDouble(superq_auxs[0][11]);
 
+        Bottle &bb1=cmd.addList();
+        Bottle &bb2=bb1.addList();
+        bb2.addString("obstacles");
+        Bottle &bb3=bb2.addList();
+
         for (size_t j=1; j<superq_auxs.size(); j++)
         {
-            Bottle &bb1=cmd.addList();
-            Bottle &bb2=bb1.addList();
-            bb2.addString("obstacles");
-            Bottle &bb3=bb2.addList();
+            
+            Bottle &bb4=bb3.addList();
 
             for (size_t k=0; k<11; k++)
             {
-                bb3.addDouble(superq_auxs[j][k]);
+                bb4.addDouble(superq_auxs[j][k]);
             }
         }
     }
