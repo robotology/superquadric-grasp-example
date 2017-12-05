@@ -654,11 +654,18 @@ public:
         if ((go_on==true) && (superq_received==true) && (pose_received==false))
         {
             Bottle cmd, reply;
-            cmd.addString("get_grasping_pose");
+            cmd.addString("get_grasping_pose");         
 
-            getBottle(superq_b, cmd);
-
-            cmd.addString(hand_for_computation);
+            if (object_class!="default")
+            {
+                getBottle(superq_b, cmd);
+                cmd.addString(hand_for_computation);
+            }
+            else
+            {
+                getBottles(superq_b,cmd);
+                cmd.addString(hand_for_computation);
+            }
 
             yInfo()<<"Command asked "<<cmd.toString();
 
@@ -998,65 +1005,139 @@ public:
     /**********************************************************************/
     void getBottle(Bottle &estimated_superq, Bottle &cmd)
     {
-        if (object_class!="default")
+        Bottle *all=estimated_superq.get(0).asList();
+
+        for (size_t i=0; i<all->size(); i++)
         {
-            Bottle *all=estimated_superq.get(0).asList();
-
-            for (size_t i=0; i<all->size(); i++)
+            Bottle *group=all->get(i).asList();
+            if (group->get(0).asString() == "dimensions")
             {
-                Bottle *group=all->get(i).asList();
-                if (group->get(0).asString() == "dimensions")
-                {
-                     Bottle *dim=group->get(1).asList();
+                 Bottle *dim=group->get(1).asList();
 
-                     superq_aux[0]=dim->get(0).asDouble(); superq_aux[1]=dim->get(1).asDouble(); superq_aux[2]=dim->get(2).asDouble();
-                }
-                else if (group->get(0).asString() == "exponents")
-                {
-                     Bottle *dim=group->get(1).asList();
+                 superq_aux[0]=dim->get(0).asDouble(); superq_aux[1]=dim->get(1).asDouble(); superq_aux[2]=dim->get(2).asDouble();
+            }
+            else if (group->get(0).asString() == "exponents")
+            {
+                 Bottle *dim=group->get(1).asList();
 
-                     superq_aux[3]=dim->get(0).asDouble(); superq_aux[4]=dim->get(1).asDouble();
-                }
-                else if (group->get(0).asString() == "center")
-                {
-                     Bottle *dim=group->get(1).asList();
+                 superq_aux[3]=dim->get(0).asDouble(); superq_aux[4]=dim->get(1).asDouble();
+            }
+            else if (group->get(0).asString() == "center")
+            {
+                 Bottle *dim=group->get(1).asList();
 
-                     superq_aux[5]=dim->get(0).asDouble(); superq_aux[6]=dim->get(1).asDouble(); superq_aux[7]=dim->get(2).asDouble();
-                }
-                else if (group->get(0).asString() == "orientation")
-                {
-                     Bottle *dim=group->get(1).asList();
+                 superq_aux[5]=dim->get(0).asDouble(); superq_aux[6]=dim->get(1).asDouble(); superq_aux[7]=dim->get(2).asDouble();
+            }
+            else if (group->get(0).asString() == "orientation")
+            {
+                 Bottle *dim=group->get(1).asList();
 
-                     superq_aux[8]=dim->get(0).asDouble(); superq_aux[9]=dim->get(1).asDouble(); superq_aux[10]=dim->get(2).asDouble(); superq_aux[11]=dim->get(3).asDouble();
-                }
-
+                 superq_aux[8]=dim->get(0).asDouble(); superq_aux[9]=dim->get(1).asDouble(); superq_aux[10]=dim->get(2).asDouble(); superq_aux[11]=dim->get(3).asDouble();
             }
 
-            Bottle &b1=cmd.addList();
-            Bottle &b2=b1.addList();
-            b2.addString("dimensions");
-            Bottle &b2l=b2.addList();
-            b2l.addDouble(superq_aux[0]); b2l.addDouble(superq_aux[1]); b2l.addDouble(superq_aux[2]);
-
-            Bottle &b3=b1.addList();
-            b3.addString("exponents");
-            Bottle &b3l=b3.addList();
-            b3l.addDouble(superq_aux[3]); b3l.addDouble(superq_aux[4]);
-
-            Bottle &b4=b1.addList();
-            b4.addString("center");
-            Bottle &b4l=b4.addList();
-            b4l.addDouble(superq_aux[5]); b4l.addDouble(superq_aux[6]); b4l.addDouble(superq_aux[7]);
-
-            Bottle &b5=b1.addList();
-            b5.addString("orientation");
-            Bottle &b5l=b5.addList();
-            b5l.addDouble(superq_aux[8]); b5l.addDouble(superq_aux[9]); b5l.addDouble(superq_aux[10]); b5l.addDouble(superq_aux[11]);
         }
-        else
-        {
-            //Devi estrarre le superquadriche (dimensions_1 ecc) e ricreare una bottle
 
+        Bottle &b1=cmd.addList();
+        Bottle &b2=b1.addList();
+        b2.addString("dimensions");
+        Bottle &b2l=b2.addList();
+        b2l.addDouble(superq_aux[0]); b2l.addDouble(superq_aux[1]); b2l.addDouble(superq_aux[2]);
+
+        Bottle &b3=b1.addList();
+        b3.addString("exponents");
+        Bottle &b3l=b3.addList();
+        b3l.addDouble(superq_aux[3]); b3l.addDouble(superq_aux[4]);
+
+        Bottle &b4=b1.addList();
+        b4.addString("center");
+        Bottle &b4l=b4.addList();
+        b4l.addDouble(superq_aux[5]); b4l.addDouble(superq_aux[6]); b4l.addDouble(superq_aux[7]);
+
+        Bottle &b5=b1.addList();
+        b5.addString("orientation");
+        Bottle &b5l=b5.addList();
+        b5l.addDouble(superq_aux[8]); b5l.addDouble(superq_aux[9]); b5l.addDouble(superq_aux[10]); b5l.addDouble(superq_aux[11]);
+    }
+
+    /**
+    * Process bottle with the superquadric.
+    */
+    /**********************************************************************/
+    void getBottles(Bottle &estimated_superq, Bottle &cmd)
+    {
+        Bottle *all=estimated_superq.get(0).asList();
+
+        deque<Vector> superq_auxs;
+
+        Vector sup(11,0.0);
+
+        for (size_t i=0; i<all->size(); i++)
+        {
+            stringstream ss;
+            ss<<i/4;
+            string i_str=ss.str();
+
+            Bottle *group=all->get(i).asList();
+            if (group->get(0).asString() == "dimensions_"+i_str)
+            {
+                Bottle *dim=group->get(1).asList();
+
+                sup[0]=dim->get(0).asDouble(); sup[1]=dim->get(1).asDouble(); sup[2]=dim->get(2).asDouble();
+            }
+            if (group->get(0).asString() == "exponents_"+i_str)
+            {
+                Bottle *dim=group->get(1).asList();
+
+                sup[3]=dim->get(0).asDouble(); sup[4]=dim->get(1).asDouble();
+            }
+            if (group->get(0).asString() == "center_"+i_str)
+            {
+                Bottle *dim=group->get(1).asList();
+
+                sup[5]=dim->get(0).asDouble(); sup[6]=dim->get(1).asDouble(); sup[7]=dim->get(2).asDouble();
+            }
+            if (group->get(0).asString() == "orientation_"+i_str)
+            {
+                Bottle *dim=group->get(1).asList();
+
+                sup[8]=dim->get(0).asDouble(); sup[9]=dim->get(1).asDouble(); sup[10]=dim->get(2).asDouble(); sup[11]=dim->get(3).asDouble();
+            }
+
+            superq_auxs.push_back(sup);
+        }
+
+        Bottle &b1=cmd.addList();
+        Bottle &b2=b1.addList();
+        b2.addString("dimensions");
+        Bottle &b2l=b2.addList();
+        b2l.addDouble(superq_auxs[0][0]); b2l.addDouble(superq_auxs[0][1]); b2l.addDouble(superq_auxs[0][2]);
+
+        Bottle &b3=b1.addList();
+        b3.addString("exponents");
+        Bottle &b3l=b3.addList();
+        b3l.addDouble(superq_auxs[0][3]); b3l.addDouble(superq_auxs[0][4]);
+
+        Bottle &b4=b1.addList();
+        b4.addString("center");
+        Bottle &b4l=b4.addList();
+        b4l.addDouble(superq_auxs[0][5]); b4l.addDouble(superq_auxs[0][6]); b4l.addDouble(superq_auxs[0][7]);
+
+        Bottle &b5=b1.addList();
+        b5.addString("orientation");
+        Bottle &b5l=b5.addList();
+        b5l.addDouble(superq_auxs[0][8]); b5l.addDouble(superq_auxs[0][9]); b5l.addDouble(superq_auxs[0][10]); b5l.addDouble(superq_auxs[0][11]);
+
+        for (size_t j=1; j<superq_auxs.size(); j++)
+        {
+            Bottle &bb1=cmd.addList();
+            Bottle &bb2=bb1.addList();
+            bb2.addString("obstacles");
+            Bottle &bb3=bb2.addList();
+
+            for (size_t k=0; k<11; k++)
+            {
+                bb3.addDouble(superq_auxs[j][k]);
+            }
         }
     }
 };
