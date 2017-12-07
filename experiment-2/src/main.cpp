@@ -589,31 +589,40 @@ public:
                 }
 
 yDebug()<<"pc size"<<pc.size();
-
-                for (size_t i=0; i<pc.size(); i++)
+                if (pc.size()>0)
                 {
-                    Bottle &in=in0.addList();
-                    in.addDouble(pc[i][0]);
-                    in.addDouble(pc[i][1]);
-                    in.addDouble(pc[i][2]);                        
+
+                    for (size_t i=0; i<pc.size(); i++)
+                    {
+                        Bottle &in=in0.addList();
+                        in.addDouble(pc[i][0]);
+                        in.addDouble(pc[i][1]);
+                        in.addDouble(pc[i][2]);                        
+                    }
+
+                    superqRpc.write(cmd, reply);
+
+                    cmd.clear();
+                    reply.clear();
+
+                     Time::delay(5.0);
+
+                    cmd.addString("get_superq");
+
+                    go_on=false;
+
+                    superqRpc.write(cmd, superq_b);
+
+                    yInfo()<<"Received superquadric: "<<superq_b.toString();
+
+                    superq_received=true;
                 }
-
-                superqRpc.write(cmd, reply);
-
-                cmd.clear();
-                reply.clear();
-
-                 Time::delay(5.0);
-
-                cmd.addString("get_superq");
-
-                go_on=false;
-
-                superqRpc.write(cmd, superq_b);
-
-                yInfo()<<"Received superquadric: "<<superq_b.toString();
-
-                superq_received=true;
+                else
+                {
+                    yError()<<"Some problems in getting the point cloud!";  
+                    go_on=false;
+                    superq_received=false; 
+                }
             }
             else
             {
@@ -674,16 +683,17 @@ yDebug()<<"pc size"<<pc.size();
 
         if ((go_on==true) && (superq_received==true) && (pose_received==false))
         {
-            Bottle cmd, reply;
-            cmd.addString("get_grasping_pose_multiple");         
+            Bottle cmd, reply;                   
 
             if (object_class!="default")
             {
+                cmd.addString("get_grasping_pose"); 
                 getBottle(superq_b, cmd);
                 cmd.addString(hand_for_computation);
             }
             else
             {
+                cmd.addString("get_grasping_pose_multiple"); 
                 getBottles(superq_b,cmd);
                 cmd.addString(hand_for_computation);
             }
@@ -1090,7 +1100,7 @@ yDebug()<<"pc size"<<pc.size();
 
         deque<Vector> superq_auxs;
 
-        Vector sup(11,0.0);
+        Vector sup(12,0.0);
         
         int size=all->size();
 
@@ -1165,10 +1175,12 @@ yDebug()<<"pc size"<<pc.size();
             
             Bottle &bb4=bb3.addList();
 
-            for (size_t k=0; k<11; k++)
+            for (size_t k=0; k<12; k++)
             {
                 bb4.addDouble(superq_auxs[j][k]);
             }
+
+            yDebug()<<"bb4 "<<bb4.toString();
         }
     }
 };
