@@ -188,7 +188,6 @@ public:
             return false;
     }
 
-
     /**
     * Get the hand for pose computation.
     * @return "right", "left" or "both".
@@ -563,11 +562,6 @@ public:
         {
             ImgIn=portImgIn.read(false);
 
-            //if (blob_points.size()>1)
-            //{
-            //    points=get3Dpoints(ImgIn);           
-            //}
-
             if (!filtered || object_class=="default")
             {
                 Bottle cmd, reply;                
@@ -588,7 +582,6 @@ public:
                     pc=get3Dpoints(ImgIn);
                 }
 
-yDebug()<<"pc size"<<pc.size();
                 if (pc.size()>0)
                 {
 
