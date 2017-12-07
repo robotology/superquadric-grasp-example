@@ -465,7 +465,7 @@ public:
         reset=(rf.check("reset", Value("off")).asString()=="on");
         hand_for_computation=rf.check("hand_for_computation", Value("both")).asString();
         hand_for_moving=rf.check("hand_for_moving", Value("right")).asString();
-        choose_hand=rf.check("hand_for_moving", Value(false)).asBool();
+        choose_hand=rf.check("choose_hand", Value(false)).asBool();
 
         n_pc=rf.check("num_point_cloud", Value(5)).asInt();
 
