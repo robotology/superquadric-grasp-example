@@ -598,7 +598,7 @@ public:
                     cmd.clear();
                     reply.clear();
 
-                     Time::delay(5.0);
+                     //Time::delay(5.0);
 
                     cmd.addString("get_superq");
 
