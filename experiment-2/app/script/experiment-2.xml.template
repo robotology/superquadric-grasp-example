@@ -99,7 +99,7 @@
     <connection>
         <from>/icub/camcalib/left/out</from>
         <to>/superquadric-model/img:i</to>
-        <protocol>tcp</protocol>
+        <protocol>mcast</protocol>
     </connection>
 
     <connection>
@@ -129,7 +129,7 @@
     <connection>
         <from>/icub/camcalib/left/out</from>
         <to>/superquadric-grasp/img:i</to>
-        <protocol>udp</protocol>
+        <protocol>mcast</protocol>
     </connection>
 
 </application>

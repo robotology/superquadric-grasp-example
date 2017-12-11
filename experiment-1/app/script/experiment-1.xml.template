@@ -99,7 +99,7 @@
     <connection>
         <from>/icub/camcalib/left/out</from>
         <to>/superquadric-model/img:i</to>
-        <protocol>tcp</protocol>
+        <protocol>mcast</protocol>
     </connection>
 
     <connection>
@@ -116,7 +116,7 @@
 
     <module>
        <name>yarpview</name>
-       <parameters>--name /dispPose --out /dispPose/out --x 1600 --y 370 --w 600 --h 600 --p  200</parameters>
+       <parameters>--name /dispPose --out /dispPose/out --x 700 --y 370 --w 600 --h 600 --p  200</parameters>
        <node>icub22</node>
     </module>
 
@@ -129,7 +129,13 @@
     <connection>
         <from>/icub/camcalib/left/out</from>
         <to>/superquadric-grasp/img:i</to>
-        <protocol>udp</protocol>
+        <protocol>mcast</protocol>
+    </connection>
+
+    <connection>
+        <from>/icub/camcalib/left/out</from>
+        <to>/experiment-1/img:i</to>
+        <protocol>mcast</protocol>
     </connection>
 
 </application>
