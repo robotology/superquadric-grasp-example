@@ -576,7 +576,6 @@ public:
 
                 pc.clear();
 
-
                 if (blob_points.size()>1)
                 {
                     pc=get3Dpoints(ImgIn);
@@ -817,6 +816,7 @@ public:
         cond_2.addString(objname);
 
         portOPCrpc.write(cmd,reply);
+
         if(reply.size()>1)
         {
             if(reply.get(0).asVocab()==Vocab::encode("ack"))
@@ -1172,8 +1172,6 @@ public:
             {
                 bb4.addDouble(superq_auxs[j][k]);
             }
-
-            yDebug()<<"bb4 "<<bb4.toString();
         }
     }
 };
